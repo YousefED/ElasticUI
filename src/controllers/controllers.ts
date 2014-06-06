@@ -1,0 +1,1 @@
+angular.module('elasticui.controllers', []).controller(elasticui.controllers)

@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{7631E361-4715-438F-B903-B377E3F9326E}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>dist</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="lib\types\elastic.d.ts" />
+    <TypeScriptCompile Include="src\controllers\AggregationController.ts" />
+    <TypeScriptCompile Include="src\controllers\IFilteredScope.ts" />
+    <TypeScriptCompile Include="src\controllers\OrFilterController.ts" />
+    <TypeScriptCompile Include="src\controllers\SortController.ts" />
+    <TypeScriptCompile Include="src\controllers\IIndexScope.ts" />
+    <TypeScriptCompile Include="src\directives\VarDirective.ts" />
+    <TypeScriptCompile Include="src\directives\IndexDirective.ts" />
+    <TypeScriptCompile Include="src\directives\OrFilterDirective.ts" />
+    <TypeScriptCompile Include="src\directives\AggregationDirective.ts" />
+    <TypeScriptCompile Include="src\directives\SortDirective.ts" />
+    <TypeScriptCompile Include="src\directives\InvertedDirective.ts" />
+    <TypeScriptCompile Include="src\filters\RoundFilter.ts" />
+    <TypeScriptCompile Include="src\filters\TimestampFilter.ts" />
+    <TypeScriptCompile Include="src\filters\CachedFilter.ts" />
+    <TypeScriptCompile Include="src\filters\filters.ts" />
+    <TypeScriptCompile Include="src\filters\MapFilter.ts" />
+    <TypeScriptCompile Include="src\filters\PageRangeFilter.ts" />
+    <TypeScriptCompile Include="src\filters\RangeFilter.ts" />
+    <TypeScriptCompile Include="src\services\ElasticService.ts" />
+    <TypeScriptCompile Include="src\util\FilterCollection.ts" />
+    <TypeScriptCompile Include="src\util\FilterTool.ts" />
+    <TypeScriptCompile Include="_references.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="lib\types\angularjs\angular.d.ts" />
+    <TypeScriptCompile Include="lib\types\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="src\controllers\controllers.ts" />
+    <TypeScriptCompile Include="src\controllers\IndexController.ts" />
+    <TypeScriptCompile Include="src\controllers\FilterController.ts" />
+    <TypeScriptCompile Include="src\directives\directives.ts" />
+    <TypeScriptCompile Include="src\directives\FilterDirective.ts" />
+    <TypeScriptCompile Include="src\main.ts" />
+    <TypeScriptCompile Include="src\services\services.ts" />
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Beam</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53431</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:53431/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptOutFile>dist/elasticui.js</TypeScriptOutFile>
+    <TypeScriptOutDir>dist</TypeScriptOutDir>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <WarningLevel>0</WarningLevel>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,52 @@
+{
+  "author": { 
+    "name" : "Yousef El-Dardiry", 
+    "email" : "yousef@tweetbeam.com",
+	"url" : "http://www.twitter.com/yousefed"
+  },
+  "name": "elasticui",
+  "description": "compile typescript to javascript",
+  "version": "0.0.1",
+  "homepage": "https://github.com/TODO/TODO",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:TODO/TODO.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TODO/TODO/issues"
+  },
+  "licenses": [
+    {
+      "type": "TODO",
+      "url": "TODO"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "scripts": {
+    "start": "grunt build"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "typescript": "1.0.0 - 1.0.1"
+  },
+  "peerDependencies": {
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "typescript": "1.0.1",
+	"grunt-typescript":"0.3.6",
+	"grunt-contrib-uglify": "0.2.7"
+  },
+  "optionalDependencies": {},
+  "keywords": [
+    "elasticsearch",
+	"elastic",
+	"angular",
+	"angularjs",
+	"kibana",
+	"logstash",
+    "typescript"
+  ]
+}
