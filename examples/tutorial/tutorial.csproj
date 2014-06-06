@@ -23,16 +23,6 @@
     <Content Include="1-setup.html" />
     <Content Include="lib\elastic.js" />
     <Content Include="lib\elasticsearch.angular.js" />
-    <Content Include="lib\elasticui.js" />
-    <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

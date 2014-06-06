@@ -3,27 +3,34 @@
 <head>
     <title>ElasticUI Tutorial</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
-    <script src="https://code.angularjs.org/1.2.16/angular.js"></script>
-    <script src="lib/elasticsearch.angular.js"></script>
-    <script src="lib/elastic.js"></script>
-    <script src="lib/elasticui.js"></script>
+    <script src="http://code.angularjs.org/1.2.16/angular.js"></script>
+    <script src="http://rawgit.com/YousefED/ElasticUI/master/examples/tutorial/lib/elasticsearch.angular.js"></script>
+    <script src="http://rawgit.com/YousefED/ElasticUI/master/examples/tutorial/lib/elastic.js"></script>
+    <script src="http://rawgit.com/YousefED/ElasticUI/master/dist/elasticui.min.js"></script>
     <script>
         angular
             .module('tutorial', ['elasticui'])
             .constant('euiHost', 'http://localhost:9200'); // ACTION: change to cluster address
     </script>
+    <style>
+        .sidebar {
+            padding-top: 80px;
+            background: #ccc;
+        }
+    </style>
 </head>
-<body ng-app="tutorial" eui-index="INDEX_NAME"><!-- ACTION: set index name -->
+<body ng-app="tutorial" eui-index="INDEX_NAME">
+    <!-- ACTION: set index name -->
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
+            <div class="col-xs-3 sidebar">
                 <ul class="nav nav-list" eui-aggregation="ejs.TermsAggregation('agg1').field('CHANGE_TO_AGG_FIELD').size(10)">
                     <li ng-repeat="bucket in aggResult.buckets">
                         {{bucket.key}} ({{bucket.doc_count}})
                     </li>
                 </ul>
             </div>
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="col-xs-9 main">
                 <h1>Sample 3: Aggregations</h1>
                 <ul>
                     <li ng-repeat="doc in indexVM.results.hits.hits">
