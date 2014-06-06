@@ -30,6 +30,7 @@ The main directive to drop in to your project, probably on the `<body>` tag:
     <body ng-app="yourApp" eui-index="INDEX_NAME">
 
 *Scope*
+
 The **euiIndex** directive adds a property named **indexVM** ([view type definition][4]) to your scope, which you can now query for results and pagination info.
 
 euiAggregation
