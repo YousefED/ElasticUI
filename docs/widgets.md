@@ -11,26 +11,26 @@ euiSearchbox
 ---
 A searchbox which performs a MatchQuery on the specified field.
 
-*Example use:*
+*Example (using widget directive):*
 
     <eui-searchbox field="'textField'"></eui-searchbox>
 
-*Raw equivalent:*
+*Raw equivalent (using the ElasticUI components directly):*
 
-Using this prebuilt directive would correspond to directly writing:
+Using this prebuilt widget would correspond to directly writing:
 
     <input type="text" eui-query="ejs.MatchQuery('textField', querystring)" ng-model="querystring" eui-enabled="querystring.length" />
 
 
 euiChecklist
 ---
-*Example use:*
+*Example (using widget directive):*
 
     <eui-checklist field="'facet_field'" size="5"></eui-checklist>
 
-*Raw equivalent:*
+*Raw equivalent (using the ElasticUI components directly):*
 
-Using this prebuilt directive would correspond to writing:
+Using this prebuilt widget would correspond to writing:
 
     <ul class="nav nav-list" eui-aggregation="ejs.TermsAggregation('facet_field').field('facet_field').size(5)">
         <li ng-repeat="bucket in aggResult.buckets">
@@ -49,13 +49,13 @@ euiSimplePaging
 ---
 Simple previous and next buttons to page through results.
 
-*Example use:*
+*Example (using widget directive):*
 
     <eui-simple-paging></eui-simple-paging>
 
-*Raw equivalent:*
+*Raw equivalent (using the ElasticUI components directly):*
 
-Using this prebuilt directive would correspond to writing:
+Using this prebuilt widget would correspond to writing:
 
     <ul class="pager">
         <li ng-class="{disabled:indexVM.page <= 1}"><a href="" ng-click="indexVM.page=indexVM.page - 1">Previous</a></li>

@@ -40,6 +40,14 @@ Components
 The directives you can use for aggregations (facets), sorting, paging and filtering your view are documented in [docs/components.md][5].
 These components are the core of ElasticUI and is what you'd want to build your own front-end on.
 
+For example, creating an aggregation and listing the buckets it returns is as simple as:
+
+    <ul eui-aggregation="ejs.TermsAggregation('agg_name').field('AGG_FIELD').size(10)">
+        <li ng-repeat="bucket in aggResult.buckets">{{bucket}}</li>
+    </ul>
+
+[Read more][5]
+
 Screenshot
 ===
 Example dashboard built on top of this project:

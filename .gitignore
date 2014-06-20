@@ -177,3 +177,6 @@ UpgradeLog*.htm
 FakesAssemblies/
 dist/elasticui.dll
 docs/Thumbs.db
+README.html
+docs/widgets.html
+CONTRIBUTING.html
