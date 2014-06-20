@@ -32,13 +32,13 @@ Screenshot
 ===
 Example dashboard built on top of this project:
 
-![World Cup Twitter Dashboard](//raw.githubusercontent.com/YousefED/ElasticUI/master/docs/example_twitter_dashboard.png)
+![World Cup Twitter Dashboard](https://raw.githubusercontent.com/YousefED/ElasticUI/master/docs/example_twitter_dashboard.png)
 
 
 
   [1]: http://github.com/fullscale/elastic.js
   [2]: http://www.elasticsearch.org/guide/en/elasticsearch/client/javascript-api/current/browser-builds.html
-  [3]: examples/demo/demo.html
-  [4]: docs/widgets.md
-  [5]: docs/components.md
+  [3]: https://github.com/YousefED/ElasticUI/blob/master/examples/demo/demo.html
+  [4]: https://github.com/YousefED/ElasticUI/blob/master/docs/widgets.md
+  [5]: https://github.com/YousefED/ElasticUI/blob/master/docs/components.md
   [6]: http://jsfiddle.net/gh/get/library/pure/yousefed/elasticui/tree/master/examples/demo/
