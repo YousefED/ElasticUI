@@ -8,6 +8,7 @@ module elasticui.controllers {
         public filters = new elasticui.util.FilterCollection();
 
         public indexVM: IIndexViewModel = {
+            query: null,
             sort: null,
             loaded: false,
             page: 1,
@@ -44,12 +45,13 @@ module elasticui.controllers {
             $scope.$watch('indexVM.sort', () => { this.indexVM.page = 1; this.search() });
             $scope.$watch('indexVM.page', () => this.search());
             $scope.$watch('indexVM.index', () => this.search());
-            
+            $scope.$watch('indexVM.query', () => this.search());
+
             $timeout(() => this.loaded(), 200); // TODO: find better way to recognize loading of app
         }
 
         private getSearchPromise() {
-            var request = ejs.Request().query(ejs.MatchAllQuery());
+            var request = ejs.Request();
 
             for (var i = 0; i < this.aggregations.length; i++) {
                 var agg = this.aggregations[i].getAggregation(this.filters.filters);
@@ -60,6 +62,12 @@ module elasticui.controllers {
             var combinedFilter = this.filters.getAsFilter();
             if (combinedFilter != null) {
                 request.filter(combinedFilter);
+            }
+
+            if (this.indexVM.query != null) {
+                request.query(this.indexVM.query);
+            } else {
+                request.query(ejs.MatchAllQuery());
             }
 
             if (this.indexVM.sort != null) {

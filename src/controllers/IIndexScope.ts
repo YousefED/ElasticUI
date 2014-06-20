@@ -4,6 +4,7 @@
     }
 
     export interface IIndexViewModel {
+        query: any;
         sort: any;
         loaded: boolean;
         loading: boolean;

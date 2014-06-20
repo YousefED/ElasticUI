@@ -7,14 +7,14 @@
                 this.jsonFilters = [];
             }
             FilterCollection.prototype.getFilterIndex = function (filter) {
-                return this.jsonFilters.indexOf(util.FilterTool.getJsonFromFilter(filter));
+                return this.jsonFilters.indexOf(util.EjsTool.getJsonFromEjsObject(filter));
             };
 
             FilterCollection.prototype.add = function (filter) {
                 var idx = this.getFilterIndex(filter);
                 if (idx == -1) {
                     this.filters.push(filter);
-                    this.jsonFilters.push(util.FilterTool.getJsonFromFilter(filter));
+                    this.jsonFilters.push(util.EjsTool.getJsonFromEjsObject(filter));
                 }
             };
 
@@ -66,14 +66,6 @@ var elasticui;
                 }
                 return null;
             };
-
-            FilterTool.getJsonFromFilter = function (filter) {
-                return angular.toJson(filter.toJSON());
-            };
-
-            FilterTool.equals = function (filterA, filterB) {
-                return !filterA && !filterB || (filterA && filterB && this.getJsonFromFilter(filterA) == this.getJsonFromFilter(filterB));
-            };
             return FilterTool;
         })();
         util.FilterTool = FilterTool;
@@ -124,7 +116,7 @@ var elasticui;
 (function (elasticui) {
     (function (directives) {
         var FilterDirective = (function () {
-            function FilterDirective($timeout) {
+            function FilterDirective() {
                 var directive = {};
                 directive.restrict = 'A';
                 directive.scope = true;
@@ -188,6 +180,7 @@ var elasticui;
             function InvertedDirective() {
                 var directive = {};
 
+                // http://stackoverflow.com/questions/13925462/angularjs-reverse-checkbox-state
                 directive.require = 'ngModel';
                 directive.link = function (scope, element, attrs, ngModel) {
                     ngModel.$parsers.push(function (val) {
@@ -270,6 +263,7 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (directives) {
+        // should not be used (for development purposes atm)
         var VarDirective = (function () {
             function VarDirective($timeout) {
                 var directive = {};
@@ -290,6 +284,7 @@ var elasticui;
                 };
                 return directive;
             }
+            VarDirective.$inject = ['$timeout'];
             return VarDirective;
         })();
         directives.VarDirective = VarDirective;
@@ -307,6 +302,8 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (filters) {
+        // This filter makes sure the same elastic.js object is returned after every digest.
+        // This workaround is needed because expressions like ejs.* return a new object every time
         var CachedFilter = (function () {
             function CachedFilter() {
                 var values = {};
@@ -332,6 +329,11 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (filters) {
+        // utility filter returning a tuple [_1, _2] of an elasticsearch bucket, useful for passing data to chart libraries
+        // _1 is set to the key
+        // _2 is based on property parameter you can supply an object path(e.g.: "nested.property")
+        // for example if you have buckets [{"key":"italy","doc_count":301}]
+        // you can pass "doc_count" as property and it will return [["italy", 301]]
         var MapFilter = (function () {
             function MapFilter() {
                 return function (input, property) {
@@ -546,7 +548,7 @@ var elasticui;
                 });
 
                 this.scope.$watch('filter.filter', function (newVal, oldVal) {
-                    if (!elasticui.util.FilterTool.equals(oldVal, newVal)) {
+                    if (!elasticui.util.EjsTool.equals(oldVal, newVal)) {
                         if (oldVal) {
                             _this.scope.filters.remove(oldVal);
                         }
@@ -582,6 +584,7 @@ var elasticui;
                 this.aggregations = [];
                 this.filters = new elasticui.util.FilterCollection();
                 this.indexVM = {
+                    query: null,
                     sort: null,
                     loaded: false,
                     page: 1,
@@ -602,7 +605,7 @@ var elasticui;
                 this.es = es;
 
                 $scope.indexVM = this.indexVM;
-                $scope.ejs = $window.ejs;
+                $scope.ejs = $window.ejs; // so we can use ejs in attributes etc. TODO: better to have a ejs service instead of loading from window
                 $scope.mainController = this;
                 $scope.filters = this.filters;
                 $scope.$watchCollection('filters.filters', function () {
@@ -619,10 +622,13 @@ var elasticui;
                 $scope.$watch('indexVM.index', function () {
                     return _this.search();
                 });
+                $scope.$watch('indexVM.query', function () {
+                    return _this.search();
+                });
 
                 $timeout(function () {
                     return _this.loaded();
-                }, 200);
+                }, 200); // TODO: find better way to recognize loading of app
             }
             IndexController.prototype.loaded = function () {
                 if (!this.indexVM.loaded) {
@@ -637,22 +643,30 @@ var elasticui;
             };
 
             IndexController.prototype.getSearchPromise = function () {
-                var request = ejs.Request().query(ejs.MatchAllQuery());
+                var request = ejs.Request();
 
                 for (var i = 0; i < this.aggregations.length; i++) {
                     var agg = this.aggregations[i].getAggregation(this.filters.filters);
                     request.agg(agg);
                 }
 
+                // apply search filters to the request
                 var combinedFilter = this.filters.getAsFilter();
                 if (combinedFilter != null) {
                     request.filter(combinedFilter);
+                }
+
+                if (this.indexVM.query != null) {
+                    request.query(this.indexVM.query);
+                } else {
+                    request.query(ejs.MatchAllQuery());
                 }
 
                 if (this.indexVM.sort != null) {
                     request.sort(this.indexVM.sort);
                 }
 
+                //console.log("request to ES");
                 var res = this.es.client.search({
                     index: this.indexVM.index,
                     size: this.indexVM.pageSize,
@@ -793,4 +807,309 @@ var elasticui;
     })(elasticui.services || (elasticui.services = {}));
     var services = elasticui.services;
 })(elasticui || (elasticui = {}));
-angular.module('elasticui', ['elasticsearch', 'elasticui.filters', 'elasticui.controllers', 'elasticui.services', 'elasticui.directives']);
+angular.module('elasticui', ['elasticsearch', 'elasticui.filters', 'elasticui.controllers', 'elasticui.services', 'elasticui.directives', 'elasticui.widgets.directives']);
+var elasticui;
+(function (elasticui) {
+    (function (widgets) {
+        (function (_directives) {
+            _directives.directives = angular.module('elasticui.widgets.directives', []);
+            _directives.default_agg_count = 0;
+        })(widgets.directives || (widgets.directives = {}));
+        var directives = widgets.directives;
+    })(elasticui.widgets || (elasticui.widgets = {}));
+    var widgets = elasticui.widgets;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (widgets) {
+        (function (directives) {
+            var ChecklistDirective = (function () {
+                function ChecklistDirective($parse) {
+                    var directive = {};
+                    directive.restrict = 'E';
+                    directive.scope = true;
+
+                    directive.link = {
+                        'pre': function (scope, element, attrs) {
+                            elasticui.util.AngularTool.setupBinding($parse, scope, attrs, ["field", "size"]);
+                            scope.agg_name = scope.field.replace(/[^a-z_0-9]/gmi, "_") + "_" + (directives.default_agg_count++);
+                        }
+                    };
+
+                    // TODO: make sure checked boxes are always at top
+                    directive.template = '\
+            <ul class="nav nav-list" eui-aggregation="ejs.TermsAggregation(agg_name).field(field).size(size)">\
+                <li ng-repeat="bucket in aggResult.buckets">\
+                    <label class="checkbox" eui-filter="ejs.TermsFilter(field, bucket.key)">\
+                        <input type="checkbox" ng-model="filter.enabled">\
+                        {{bucket.key}} ({{bucket.doc_count}})\
+                    </label>\
+                </li>\
+            </ul>';
+
+                    return directive;
+                }
+                ChecklistDirective.$inject = ['$parse'];
+                return ChecklistDirective;
+            })();
+            directives.ChecklistDirective = ChecklistDirective;
+            directives.directives.directive('euiChecklist', ChecklistDirective);
+        })(widgets.directives || (widgets.directives = {}));
+        var directives = widgets.directives;
+    })(elasticui.widgets || (elasticui.widgets = {}));
+    var widgets = elasticui.widgets;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (widgets) {
+        (function (directives) {
+            var SimplePagingDirective = (function () {
+                function SimplePagingDirective() {
+                    var directive = {};
+                    directive.restrict = 'E';
+                    directive.scope = true;
+
+                    directive.template = '\
+            <ul class="pager">\
+                <li ng-class="{disabled:indexVM.page <= 1}"><a href="" ng-click="indexVM.page=indexVM.page - 1">Previous</a></li>\
+                <li ng-class="{disabled:indexVM.pageCount <= indexVM.page}"><a href="" ng-click="indexVM.page=indexVM.page + 1">Next</a></li>\
+            </ul>';
+
+                    return directive;
+                }
+                return SimplePagingDirective;
+            })();
+            directives.SimplePagingDirective = SimplePagingDirective;
+            directives.directives.directive('euiSimplePaging', SimplePagingDirective);
+        })(widgets.directives || (widgets.directives = {}));
+        var directives = widgets.directives;
+    })(elasticui.widgets || (elasticui.widgets = {}));
+    var widgets = elasticui.widgets;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (widgets) {
+        (function (directives) {
+            var SingleselectDirective = (function () {
+                function SingleselectDirective($parse) {
+                    var directive = {};
+                    directive.restrict = 'E';
+                    directive.scope = true;
+
+                    directive.link = {
+                        'pre': function (scope, element, attrs) {
+                            elasticui.util.AngularTool.setupBinding($parse, scope, attrs, ["field", "size"]);
+                            scope.agg_name = scope.field.replace(/[^a-z_0-9]/gmi, "_") + "_" + (directives.default_agg_count++);
+                        }
+                    };
+
+                    directive.template = '\
+            <ul class="nav nav-list" eui-aggregation="ejs.TermsAggregation(agg_name).field(field).size(size)">\
+                <li ng-repeat="bucket in aggResult.buckets">\
+                    <label eui-filter="ejs.TermsFilter(field, bucket.key)">\
+                        <span ng-if="!filter.enabled"><a href="" ng-click="filter.enabled=true">{{bucket.key}} <span class="muted">({{bucket.doc_count}})</span></a></span>\
+                        <span ng-if="filter.enabled">{{bucket.key}} <a href="" ng-click="filter.enabled=false" class="facet-remove">x</a></span>\
+                    </label>\
+                </li>\
+            </ul>';
+
+                    return directive;
+                }
+                SingleselectDirective.$inject = ['$parse'];
+                return SingleselectDirective;
+            })();
+            directives.SingleselectDirective = SingleselectDirective;
+            directives.directives.directive('euiSingleselect', SingleselectDirective);
+        })(widgets.directives || (widgets.directives = {}));
+        var directives = widgets.directives;
+    })(elasticui.widgets || (elasticui.widgets = {}));
+    var widgets = elasticui.widgets;
+})(elasticui || (elasticui = {}));
+/// <reference path="src/util/FilterCollection.ts" />
+/// <reference path="src/util/FilterTool.ts" />
+/// <reference path="src/services/services.ts" />
+/// <reference path="src/directives/directives.ts" />
+/// <reference path="src/directives/AggregationDirective.ts" />
+/// <reference path="src/directives/FilterDirective.ts" />
+/// <reference path="src/directives/IndexDirective.ts" />
+/// <reference path="src/directives/InvertedDirective.ts" />
+/// <reference path="src/directives/OrFilterDirective.ts" />
+/// <reference path="src/directives/SortDirective.ts" />
+/// <reference path="src/directives/VarDirective.ts" />
+/// <reference path="src/filters/filters.ts" />
+/// <reference path="src/filters/CachedFilter.ts" />
+/// <reference path="src/filters/MapFilter.ts" />
+/// <reference path="src/filters/PageRangeFilter.ts" />
+/// <reference path="src/filters/RangeFilter.ts" />
+/// <reference path="src/filters/RoundFilter.ts" />
+/// <reference path="src/filters/TimestampFilter.ts" />
+/// <reference path="src/controllers/controllers.ts" />
+/// <reference path="src/controllers/AggregationController.ts" />
+/// <reference path="src/controllers/FilterController.ts" />
+/// <reference path="src/controllers/IFilteredScope.ts" />
+/// <reference path="src/controllers/IIndexScope.ts" />
+/// <reference path="src/controllers/IndexController.ts" />
+/// <reference path="src/controllers/OrFilterController.ts" />
+/// <reference path="src/controllers/SortController.ts" />
+/// <reference path="src/services/services.ts" />
+/// <reference path="src/services/ElasticService.ts" />
+/// <reference path="src/controllers/controllers.ts" />
+/// <reference path="src/main.ts" />
+/// <reference path="src/widgets/directives/directives.ts" />
+/// <reference path="src/widgets/directives/checklistdirective.ts" />
+/// <reference path="src/widgets/directives/simplepagingdirective.ts" />
+/// <reference path="src/widgets/directives/singleselectdirective.ts" />
+var elasticui;
+(function (elasticui) {
+    (function (controllers) {
+        var QueryController = (function () {
+            function QueryController($scope) {
+                this.scope = $scope;
+            }
+            QueryController.prototype.init = function () {
+                var _this = this;
+                this.scope.$watch('query.enabled', function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        _this.updateQuery();
+                    }
+                });
+
+                this.scope.$watch('query.query', function (newVal, oldVal) {
+                    if (!elasticui.util.EjsTool.equals(oldVal, newVal)) {
+                        _this.updateQuery();
+                    }
+                });
+                this.updateQuery();
+            };
+
+            QueryController.prototype.updateQuery = function () {
+                if (!this.scope.query.query) {
+                    return;
+                }
+                if (!this.scope.query.enabled) {
+                    this.scope.indexVM.query = null;
+                } else {
+                    this.scope.indexVM.query = this.scope.query.query;
+                }
+            };
+            QueryController.$inject = ['$scope'];
+            return QueryController;
+        })();
+        controllers.QueryController = QueryController;
+    })(elasticui.controllers || (elasticui.controllers = {}));
+    var controllers = elasticui.controllers;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (directives) {
+        var QueryDirective = (function () {
+            function QueryDirective() {
+                var directive = {};
+                directive.restrict = 'A';
+                directive.scope = true;
+                directive.controller = elasticui.controllers.QueryController;
+                directive.link = function (scope, element, attrs, queryCtrl) {
+                    scope.$watch(element.attr('eui-query') + " | euiCached", function (val) {
+                        return scope.query.query = val;
+                    });
+
+                    var enabled = false;
+                    var enabledAttr = element.attr('eui-enabled');
+                    if (enabledAttr) {
+                        scope.$watch(enabledAttr, function (val) {
+                            return scope.query.enabled = val;
+                        });
+                        enabled = scope.$eval(enabledAttr);
+                    }
+
+                    scope.query = {
+                        query: scope.$eval(element.attr('eui-query') + " | euiCached"),
+                        enabled: enabled
+                    };
+
+                    queryCtrl.init();
+                };
+                return directive;
+            }
+            return QueryDirective;
+        })();
+        directives.QueryDirective = QueryDirective;
+        directives.directives.directive('euiQuery', QueryDirective);
+    })(elasticui.directives || (elasticui.directives = {}));
+    var directives = elasticui.directives;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (util) {
+        // TODO, probably want to move stuff in util module to services
+        var AngularTool = (function () {
+            function AngularTool() {
+            }
+            AngularTool.setupBinding = function ($parse, scope, attrs, attrsToBind) {
+                angular.forEach(attrsToBind, function (attrName, key) {
+                    scope.$watch(attrs[attrName], function (val) {
+                        if (scope[attrName] != val) {
+                            scope[attrName] = val;
+                        }
+                    });
+                    scope[attrName] = $parse(attrs[attrName])(scope);
+                });
+            };
+            return AngularTool;
+        })();
+        util.AngularTool = AngularTool;
+    })(elasticui.util || (elasticui.util = {}));
+    var util = elasticui.util;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (util) {
+        var EjsTool = (function () {
+            function EjsTool() {
+            }
+            EjsTool.getJsonFromEjsObject = function (object) {
+                return angular.toJson(object.toJSON());
+            };
+
+            EjsTool.equals = function (objectA, objectB) {
+                return !objectA && !objectB || (objectA && objectB && this.getJsonFromEjsObject(objectA) == this.getJsonFromEjsObject(objectB));
+            };
+            return EjsTool;
+        })();
+        util.EjsTool = EjsTool;
+    })(elasticui.util || (elasticui.util = {}));
+    var util = elasticui.util;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (widgets) {
+        (function (directives) {
+            var SearchboxDirective = (function () {
+                function SearchboxDirective($parse) {
+                    var directive = {};
+                    directive.restrict = 'E';
+                    directive.scope = true;
+
+                    directive.link = {
+                        'pre': function (scope, element, attrs) {
+                            elasticui.util.AngularTool.setupBinding($parse, scope, attrs, ["field"]);
+                        }
+                    };
+
+                    directive.template = '\
+            <input type="text" eui-query="ejs.MatchQuery(field, querystring)" ng-model="querystring" eui-enabled="querystring.length" />\
+            ';
+
+                    return directive;
+                }
+                SearchboxDirective.$inject = ['$parse'];
+                return SearchboxDirective;
+            })();
+            directives.SearchboxDirective = SearchboxDirective;
+            directives.directives.directive('euiSearchbox', SearchboxDirective);
+        })(widgets.directives || (widgets.directives = {}));
+        var directives = widgets.directives;
+    })(elasticui.widgets || (elasticui.widgets = {}));
+    var widgets = elasticui.widgets;
+})(elasticui || (elasticui = {}));
+//# sourceMappingURL=elasticui.js.map

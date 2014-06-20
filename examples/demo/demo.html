@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ElasticUI Demo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <script src="http://code.angularjs.org/1.2.16/angular.js"></script>
+    <script src="http://rawgit.com/YousefED/ElasticUI/master/examples/tutorial/lib/elasticsearch.angular.js"></script>
+    <script src="http://rawgit.com/YousefED/ElasticUI/master/examples/tutorial/lib/elastic.js"></script>
+    <script src="http://rawgit.com/YousefED/ElasticUI/master/dist/elasticui.min.js"></script>
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
+            display: block;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+            border-right: 1px solid #eee;
+        }
+
+        .instructions {
+            display: block;
+            margin: 0 auto;
+            width: 450px;
+        }
+    </style>
+    <script>
+        angular
+            .module('tutorial', ['elasticui'])
+            .constant('euiHost', 'http://localhost:9200'); // ACTION: change to cluster address
+    </script>
+</head>
+<body ng-app="tutorial" eui-index="CHANGE_TO_INDEX"><!-- ACTION: change to index name -->
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-xs-3 sidebar">
+                <h3>Search</h3>
+                <eui-searchbox field="'CHANGE_TO_FIELD'"></eui-searchbox> <!-- ACTION: change to field to search on -->
+                <h3>Single select facet</h3>
+                <eui-singleselect field="'CHANGE_TO_FIELD'" size="5"></eui-singleselect> <!-- ACTION: change to field to use as facet -->
+                <h3>Multi select facet</h3>
+                <eui-checklist field="'CHANGE_TO_FIELD'" size="10"></eui-checklist> <!-- ACTION: change to field to use as facet -->
+            </div>
+            <div class="col-xs-9 col-xs-offset-3 main">
+                <div class="instructions panel panel-primary">
+                    <!-- README -->
+                    <div class="panel-heading">Getting started with the Demo</div>
+                    <div class="panel-body">
+                        Instructions, modify this file according to the following:
+                        <ol>
+                            <li>Set the constant euiHost in &lt;head&gt; to point to your cluster</li>
+                            <li>Change eui-index on &lt;body&gt; tag to the name of your index</li>
+                            <li>Set the field attributes on the facets in the sidebar to meaningful fields of your data</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h1>Results</h1>
+                <ul>
+                    <li ng-repeat="doc in indexVM.results.hits.hits">
+                        ID: {{doc._source | json | limitTo: 500}} <!-- OPTIONAL: display more meaningful data instead of json -->
+                    </li>
+                </ul>
+                <eui-simple-paging></eui-simple-paging>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

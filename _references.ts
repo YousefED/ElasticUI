@@ -35,3 +35,10 @@
 
 /// <reference path="src/controllers/controllers.ts" />
 /// <reference path="src/main.ts" />
+
+/// <reference path="src/widgets/directives/directives.ts" />
+/// <reference path="src/widgets/directives/checklistdirective.ts" />
+/// <reference path="src/widgets/directives/simplepagingdirective.ts" />
+/// <reference path="src/widgets/directives/singleselectdirective.ts" />
+
+

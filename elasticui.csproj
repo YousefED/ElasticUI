@@ -19,10 +19,12 @@
   <ItemGroup>
     <TypeScriptCompile Include="lib\types\elastic.d.ts" />
     <TypeScriptCompile Include="src\controllers\AggregationController.ts" />
+    <TypeScriptCompile Include="src\controllers\QueryController.ts" />
     <TypeScriptCompile Include="src\controllers\IFilteredScope.ts" />
     <TypeScriptCompile Include="src\controllers\OrFilterController.ts" />
     <TypeScriptCompile Include="src\controllers\SortController.ts" />
     <TypeScriptCompile Include="src\controllers\IIndexScope.ts" />
+    <TypeScriptCompile Include="src\directives\QueryDirective.ts" />
     <TypeScriptCompile Include="src\directives\VarDirective.ts" />
     <TypeScriptCompile Include="src\directives\IndexDirective.ts" />
     <TypeScriptCompile Include="src\directives\OrFilterDirective.ts" />
@@ -38,7 +40,14 @@
     <TypeScriptCompile Include="src\filters\RangeFilter.ts" />
     <TypeScriptCompile Include="src\services\ElasticService.ts" />
     <TypeScriptCompile Include="src\util\FilterCollection.ts" />
+    <TypeScriptCompile Include="src\util\AngularTool.ts" />
+    <TypeScriptCompile Include="src\util\EjsTool.ts" />
     <TypeScriptCompile Include="src\util\FilterTool.ts" />
+    <TypeScriptCompile Include="src\widgets\directives\SimplePagingDirective.ts" />
+    <TypeScriptCompile Include="src\widgets\directives\SearchboxDirective.ts" />
+    <TypeScriptCompile Include="src\widgets\directives\SingleselectDirective.ts" />
+    <TypeScriptCompile Include="src\widgets\directives\directives.ts" />
+    <TypeScriptCompile Include="src\widgets\directives\ChecklistDirective.ts" />
     <TypeScriptCompile Include="_references.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -55,7 +64,9 @@
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\services\services.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="demo.html" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

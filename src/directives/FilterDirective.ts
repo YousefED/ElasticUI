@@ -1,6 +1,6 @@
 module elasticui.directives {
     export class FilterDirective {
-        constructor($timeout) {
+        constructor() {
             var directive: ng.IDirective = {};
             directive.restrict = 'A';
             directive.scope = true;

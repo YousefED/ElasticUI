@@ -17,13 +17,5 @@
             }
             return null;
         }
-
-        public static getJsonFromFilter(filter: any) {
-            return angular.toJson(filter.toJSON());
-        }
-
-        public static equals(filterA: any, filterB: any) {
-            return !filterA && !filterB || (filterA && filterB && this.getJsonFromFilter(filterA) == this.getJsonFromFilter(filterB));
-        }
     }
 }

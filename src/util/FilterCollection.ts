@@ -4,14 +4,14 @@
         private jsonFilters = [];
 
         private getFilterIndex(filter) {
-            return this.jsonFilters.indexOf(FilterTool.getJsonFromFilter(filter));
+            return this.jsonFilters.indexOf(EjsTool.getJsonFromEjsObject(filter));
         }
 
         public add(filter: any) {
             var idx = this.getFilterIndex(filter);
             if (idx == -1) {
                 this.filters.push(filter);
-                this.jsonFilters.push(FilterTool.getJsonFromFilter(filter));
+                this.jsonFilters.push(EjsTool.getJsonFromEjsObject(filter));
             }
         }
 

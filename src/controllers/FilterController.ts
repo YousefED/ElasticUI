@@ -1,6 +1,6 @@
 module elasticui.controllers {
     export interface IFilterScope extends IIndexScope {
-        filter: { filter: boolean; enabled: boolean };
+        filter: { filter: any; enabled: boolean };
     }
 
     export class FilterController {
@@ -28,7 +28,7 @@ module elasticui.controllers {
             });
 
             this.scope.$watch('filter.filter', (newVal, oldVal) => { 
-                if (!util.FilterTool.equals(oldVal, newVal)) {
+                if (!util.EjsTool.equals(oldVal, newVal)) {
                     if (oldVal) {
                         this.scope.filters.remove(oldVal);
                     }
