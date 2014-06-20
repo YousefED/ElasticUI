@@ -3,7 +3,7 @@ ElasticUI
 
 ElasticUI is a set of AngularJS directives making it easy to rapidly build a frontend on top of Elasticsearch. It builds upon the elastic.js implementation of the Elasticsearch DSL.
 
-**The concept of ElasticUI is to have one "view" of your index to which you can add aggregations, sorting, paging, filters by adding directives in your app.**
+**The concept of ElasticUI is to have one "view" of your index to which you can add aggregations, sorting, paging, filters by adding directives in your html.**
 
 Getting started (demo file)
 ---
@@ -32,7 +32,7 @@ Screenshot
 ===
 Example dashboard built on top of this project:
 
-![World Cup Twitter Dashboard](docs/example_twitter_dashboard.png)
+![World Cup Twitter Dashboard](//raw.githubusercontent.com/YousefED/ElasticUI/master/docs/example_twitter_dashboard.png)
 
 
 

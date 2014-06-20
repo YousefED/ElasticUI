@@ -7,18 +7,18 @@
   "name": "elasticui",
   "description": "compile typescript to javascript",
   "version": "0.0.1",
-  "homepage": "https://github.com/TODO/TODO",
+  "homepage": "http://www.elasticui.com",
   "repository": {
     "type": "git",
-    "url": "git@github.com:TODO/TODO.git"
+    "url": "git@github.com:YousefED/ElasticUI.git"
   },
   "bugs": {
-    "url": "https://github.com/TODO/TODO/issues"
+    "url": "https://github.com/YousefED/ElasticUI/issues"
   },
   "licenses": [
     {
-      "type": "TODO",
-      "url": "TODO"
+      "type": "Apache",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   ],
   "main": "Gruntfile.js",

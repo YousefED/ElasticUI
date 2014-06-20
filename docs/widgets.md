@@ -37,7 +37,7 @@ Using this prebuilt directive would correspond to writing:
         </li>
     </ul>
 
-Screenshot:
+*Screenshot:*
 
 ![checklist screenshot](checklist.png)
 

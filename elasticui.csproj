@@ -64,9 +64,6 @@
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\services\services.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="demo.html" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

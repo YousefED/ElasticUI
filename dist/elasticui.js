@@ -180,7 +180,6 @@ var elasticui;
             function InvertedDirective() {
                 var directive = {};
 
-                // http://stackoverflow.com/questions/13925462/angularjs-reverse-checkbox-state
                 directive.require = 'ngModel';
                 directive.link = function (scope, element, attrs, ngModel) {
                     ngModel.$parsers.push(function (val) {
@@ -263,7 +262,6 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (directives) {
-        // should not be used (for development purposes atm)
         var VarDirective = (function () {
             function VarDirective($timeout) {
                 var directive = {};
@@ -302,8 +300,6 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (filters) {
-        // This filter makes sure the same elastic.js object is returned after every digest.
-        // This workaround is needed because expressions like ejs.* return a new object every time
         var CachedFilter = (function () {
             function CachedFilter() {
                 var values = {};
@@ -329,11 +325,6 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (filters) {
-        // utility filter returning a tuple [_1, _2] of an elasticsearch bucket, useful for passing data to chart libraries
-        // _1 is set to the key
-        // _2 is based on property parameter you can supply an object path(e.g.: "nested.property")
-        // for example if you have buckets [{"key":"italy","doc_count":301}]
-        // you can pass "doc_count" as property and it will return [["italy", 301]]
         var MapFilter = (function () {
             function MapFilter() {
                 return function (input, property) {
@@ -605,7 +596,7 @@ var elasticui;
                 this.es = es;
 
                 $scope.indexVM = this.indexVM;
-                $scope.ejs = $window.ejs; // so we can use ejs in attributes etc. TODO: better to have a ejs service instead of loading from window
+                $scope.ejs = $window.ejs;
                 $scope.mainController = this;
                 $scope.filters = this.filters;
                 $scope.$watchCollection('filters.filters', function () {
@@ -628,7 +619,7 @@ var elasticui;
 
                 $timeout(function () {
                     return _this.loaded();
-                }, 200); // TODO: find better way to recognize loading of app
+                }, 200);
             }
             IndexController.prototype.loaded = function () {
                 if (!this.indexVM.loaded) {
@@ -650,7 +641,6 @@ var elasticui;
                     request.agg(agg);
                 }
 
-                // apply search filters to the request
                 var combinedFilter = this.filters.getAsFilter();
                 if (combinedFilter != null) {
                     request.filter(combinedFilter);
@@ -666,7 +656,6 @@ var elasticui;
                     request.sort(this.indexVM.sort);
                 }
 
-                //console.log("request to ES");
                 var res = this.es.client.search({
                     index: this.indexVM.index,
                     size: this.indexVM.pageSize,
@@ -836,7 +825,6 @@ var elasticui;
                         }
                     };
 
-                    // TODO: make sure checked boxes are always at top
                     directive.template = '\
             <ul class="nav nav-list" eui-aggregation="ejs.TermsAggregation(agg_name).field(field).size(size)">\
                 <li ng-repeat="bucket in aggResult.buckets">\
@@ -925,40 +913,6 @@ var elasticui;
     })(elasticui.widgets || (elasticui.widgets = {}));
     var widgets = elasticui.widgets;
 })(elasticui || (elasticui = {}));
-/// <reference path="src/util/FilterCollection.ts" />
-/// <reference path="src/util/FilterTool.ts" />
-/// <reference path="src/services/services.ts" />
-/// <reference path="src/directives/directives.ts" />
-/// <reference path="src/directives/AggregationDirective.ts" />
-/// <reference path="src/directives/FilterDirective.ts" />
-/// <reference path="src/directives/IndexDirective.ts" />
-/// <reference path="src/directives/InvertedDirective.ts" />
-/// <reference path="src/directives/OrFilterDirective.ts" />
-/// <reference path="src/directives/SortDirective.ts" />
-/// <reference path="src/directives/VarDirective.ts" />
-/// <reference path="src/filters/filters.ts" />
-/// <reference path="src/filters/CachedFilter.ts" />
-/// <reference path="src/filters/MapFilter.ts" />
-/// <reference path="src/filters/PageRangeFilter.ts" />
-/// <reference path="src/filters/RangeFilter.ts" />
-/// <reference path="src/filters/RoundFilter.ts" />
-/// <reference path="src/filters/TimestampFilter.ts" />
-/// <reference path="src/controllers/controllers.ts" />
-/// <reference path="src/controllers/AggregationController.ts" />
-/// <reference path="src/controllers/FilterController.ts" />
-/// <reference path="src/controllers/IFilteredScope.ts" />
-/// <reference path="src/controllers/IIndexScope.ts" />
-/// <reference path="src/controllers/IndexController.ts" />
-/// <reference path="src/controllers/OrFilterController.ts" />
-/// <reference path="src/controllers/SortController.ts" />
-/// <reference path="src/services/services.ts" />
-/// <reference path="src/services/ElasticService.ts" />
-/// <reference path="src/controllers/controllers.ts" />
-/// <reference path="src/main.ts" />
-/// <reference path="src/widgets/directives/directives.ts" />
-/// <reference path="src/widgets/directives/checklistdirective.ts" />
-/// <reference path="src/widgets/directives/simplepagingdirective.ts" />
-/// <reference path="src/widgets/directives/singleselectdirective.ts" />
 var elasticui;
 (function (elasticui) {
     (function (controllers) {
@@ -1041,7 +995,6 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (util) {
-        // TODO, probably want to move stuff in util module to services
         var AngularTool = (function () {
             function AngularTool() {
             }
@@ -1112,4 +1065,3 @@ var elasticui;
     })(elasticui.widgets || (elasticui.widgets = {}));
     var widgets = elasticui.widgets;
 })(elasticui || (elasticui = {}));
-//# sourceMappingURL=elasticui.js.map
