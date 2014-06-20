@@ -24,6 +24,9 @@ Set up ElasticUI in your project by defining your ElasticSearch host as *euiHost
 
 Set the `eui-index="INDEX_NAME"` on the `<body>` tag.
 
+Components
+===
+The directives you can use for aggregations (facets), sorting, paging and filtering your view are documented in [docs/components.md][5]
 
 Screenshot
 ===
@@ -37,3 +40,4 @@ Example dashboard built on top of this project:
   [2]: http://www.elasticsearch.org/guide/en/elasticsearch/client/javascript-api/current/browser-builds.html
   [3]: examples/tutorial
   [4]: docs/widgets.md
+  [5]: docs/components.md
