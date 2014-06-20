@@ -32,7 +32,7 @@ Screenshot
 ===
 Example dashboard built on top of this project:
 
-![World Cup Twitter Dashboard](//raw.githubusercontent.com/YousefED/ElasticUI/master/docs/example_twitter_dashboard.png)
+![World Cup Twitter Dashboard](https://raw.githubusercontent.com/YousefED/ElasticUI/master/docs/example_twitter_dashboard.png)
 
 
 
