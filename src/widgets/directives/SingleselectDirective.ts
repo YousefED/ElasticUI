@@ -1,4 +1,6 @@
 module elasticui.widgets.directives {
+    // The widgets show how to create reusable components on top of ElasticUI. 
+    // You can also directly use the directive.template html in your front-end (see docs/widgets.md for more info)
     export class SingleselectDirective {
         static $inject = ['$parse'];
         constructor($parse) {
@@ -21,7 +23,8 @@ module elasticui.widgets.directives {
                         <span ng-if="filter.enabled">{{bucket.key}} <a href="" ng-click="filter.enabled=false" class="facet-remove">x</a></span>\
                     </label>\
                 </li>\
-            </ul>'            
+            </ul>'
+            
             return directive;
         }
     }

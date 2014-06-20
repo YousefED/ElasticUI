@@ -1,7 +1,11 @@
 ﻿**The project includes a number of widgets (directives) building upon the [ElasticUI components][1] for simple faceting and search.
 Try them out in the [demo][2].**
 
-**Reviewing how they work is a good way to get started with the project.**
+Reviewing how they work is a good way to get started with the project.
+
+You don't have to use these widgets or create your own directives to get started with your own front-end. 
+Instead, you can **directly use the base [components][1]** in your front-end. 
+I.e.: directly copy the _"raw equivalent"_ code below in your HTML, and edit markup there.
 
 euiSearchbox
 ---
@@ -11,9 +15,9 @@ A searchbox which performs a MatchQuery on the specified field.
 
     <eui-searchbox field="'textField'"></eui-searchbox>
 
-*Corresponding code:*
+*Raw equivalent:*
 
-Using this prebuilt directive would correspond to writing:
+Using this prebuilt directive would correspond to directly writing:
 
     <input type="text" eui-query="ejs.MatchQuery('textField', querystring)" ng-model="querystring" eui-enabled="querystring.length" />
 
@@ -24,7 +28,7 @@ euiChecklist
 
     <eui-checklist field="'facet_field'" size="5"></eui-checklist>
 
-*Extended code:*
+*Raw equivalent:*
 
 Using this prebuilt directive would correspond to writing:
 
@@ -39,7 +43,7 @@ Using this prebuilt directive would correspond to writing:
 
 *Screenshot:*
 
-![checklist screenshot](checklist.png)
+![checklist screenshot](screenshots/checklist.png)
 
 euiSimplePaging
 ---
@@ -49,7 +53,7 @@ Simple previous and next buttons to page through results.
 
     <eui-simple-paging></eui-simple-paging>
 
-*Extended code:*
+*Raw equivalent:*
 
 Using this prebuilt directive would correspond to writing:
 

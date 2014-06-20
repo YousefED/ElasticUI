@@ -1,4 +1,6 @@
 module elasticui.widgets.directives {
+    // The widgets show how to create reusable components on top of ElasticUI. 
+    // You can also directly use the directive.template html in your front-end (see docs/widgets.md for more info)
     export class ChecklistDirective {
         static $inject = ['$parse'];
         constructor($parse) {
