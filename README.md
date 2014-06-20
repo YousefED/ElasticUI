@@ -38,6 +38,6 @@ Example dashboard built on top of this project:
 
   [1]: http://github.com/fullscale/elastic.js
   [2]: http://www.elasticsearch.org/guide/en/elasticsearch/client/javascript-api/current/browser-builds.html
-  [3]: examples/demo/demo.html
-  [4]: docs/widgets.md
-  [5]: docs/components.md
+  [3]: https://github.com/YousefED/ElasticUI/examples/demo/demo.html
+  [4]: https://github.com/YousefED/ElasticUI/docs/widgets.md
+  [5]: https://github.com/YousefED/ElasticUI/docs/components.md
