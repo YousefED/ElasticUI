@@ -1,7 +1,9 @@
 ﻿**The project includes a number of widgets (directives) building upon the [ElasticUI components][1] for simple faceting and search.
-Reviewing how they work is a good way to get started with the project.**
+Try them out in the [demo][2].**
 
-euiChecklist
+**Reviewing how they work is a good way to get started with the project.**
+
+euiSearchbox
 ---
 A searchbox which performs a MatchQuery on the specified field.
 
@@ -16,12 +18,11 @@ Using this prebuilt directive would correspond to writing:
     <input type="text" eui-query="ejs.MatchQuery('textField', querystring)" ng-model="querystring" eui-enabled="querystring.length" />
 
 
-
 euiChecklist
 ---
 *Example use:*
 
-    <eui-singleselect field="'facet_field'" size="5"></eui-singleselect>
+    <eui-checklist field="'facet_field'" size="5"></eui-checklist>
 
 *Extended code:*
 
@@ -40,5 +41,22 @@ Screenshot:
 
 ![checklist screenshot](checklist.png)
 
+euiSimplePaging
+---
+Simple previous and next buttons to page through results.
+
+*Example use:*
+
+    <eui-simple-paging></eui-simple-paging>
+
+*Extended code:*
+
+Using this prebuilt directive would correspond to writing:
+
+    <ul class="pager">
+        <li ng-class="{disabled:indexVM.page <= 1}"><a href="" ng-click="indexVM.page=indexVM.page - 1">Previous</a></li>
+        <li ng-class="{disabled:indexVM.pageCount <= indexVM.page}"><a href="" ng-click="indexVM.page=indexVM.page + 1">Next</a></li>
+    </ul>
 
 [1]: components.md
+[2]: ../examples/demo/demo.html
