@@ -7,7 +7,7 @@ ElasticUI is a set of AngularJS directives making it easy to rapidly build a fro
 
 Getting started (demo file)
 ---
-The easiest way to get started is to checkout the [demo file][3]. This file demonstrates a simple use of facets, search and pagination. Just change 4 fields in the source to match your Elasticsearch setup and mapping.
+The easiest way to get started is to checkout the [demo file][3] (or [jsfiddle][6]). This file demonstrates a simple use of facets, search and pagination. Just change 4 fields in the source to match your Elasticsearch setup and mapping.
 
 [Read more about the widgets used in the demo][4].
 
@@ -41,3 +41,4 @@ Example dashboard built on top of this project:
   [3]: examples/demo/demo.html
   [4]: docs/widgets.md
   [5]: docs/components.md
+  [6]: http://jsfiddle.net/gh/get/library/pure/yousefed/elasticui/tree/master/examples/demo/
