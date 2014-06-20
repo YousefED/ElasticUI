@@ -78,6 +78,15 @@ Just change 4 fields in the source to match your Elasticsearch setup and mapping
 <p>The directives you can use for aggregations (facets), sorting, paging and filtering your view are documented in <a href="https://github.com/YousefED/ElasticUI/blob/master/docs/components.md">docs/components.md</a>.
 These components are the core of ElasticUI and is what you'd want to build your own front-end on.</p>
 
+<p>For example, creating an aggregation and listing the buckets it returns is as simple as:</p>
+
+<pre><code>&lt;ul eui-aggregation="ejs.TermsAggregation('agg_name').field('AGG_FIELD').size(10)"&gt;
+    &lt;li ng-repeat="bucket in aggResult.buckets"&gt;{{bucket}}&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p><a href="https://github.com/YousefED/ElasticUI/blob/master/docs/components.md">Read more</a></p>
+
 <h1>
 <a name="screenshot" class="anchor" href="#screenshot"><span class="octicon octicon-link"></span></a>Screenshot</h1>
 
