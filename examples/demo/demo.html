@@ -63,7 +63,7 @@
                 <h1>Results</h1>
                 <ul>
                     <li ng-repeat="doc in indexVM.results.hits.hits">
-                        ID: {{doc._source | json | limitTo: 500}} <!-- OPTIONAL: display more meaningful data instead of json -->
+                        {{doc._source | json | limitTo: 500}} <!-- OPTIONAL: display more meaningful data instead of json -->
                     </li>
                 </ul>
                 <eui-simple-paging></eui-simple-paging>
