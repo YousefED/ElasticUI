@@ -5,6 +5,8 @@ ElasticUI is a set of AngularJS directives enabling developers to rapidly build 
 
 **The concept of ElasticUI is to have one "view" of your index to which you can add aggregations, sorting, paging, filters by adding directives in your html.**
 
+<iframe src="http://ghbtns.com/github-btn.html?user=YousefED&repo=ElasticUI&type=watch&count=true&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30"></iframe>
+
 Getting started
 ---
 The easiest way to get started is to checkout the [demo file][3] (or [jsfiddle][6]). 
