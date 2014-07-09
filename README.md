@@ -35,7 +35,7 @@ Set up ElasticUI in your project by defining your ElasticSearch host as *euiHost
 
     angular.module('yourApp', ['elasticui']).constant('euiHost', 'http://localhost:9200');
 
-Set the `eui-index="INDEX_NAME"` on the `<body>` tag, now you can get started adding ElasticUI components to your view (see below).
+Set the `eui-index="'INDEX_NAME'"` on the `<body>` tag, now you can get started adding ElasticUI components to your view (see below).
 
 Components
 ===

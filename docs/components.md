@@ -6,7 +6,7 @@ euiIndex
 ---
 The main directive to drop in to your project, probably on the `<body>` tag:
 
-    <body ng-app="yourApp" eui-index="INDEX_NAME">
+    <body ng-app="yourApp" eui-index="'INDEX_NAME'">
 
 **Scope**
 
