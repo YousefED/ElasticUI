@@ -6,7 +6,7 @@
   },
   "name": "elasticui",
   "description": "compile typescript to javascript",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "http://www.elasticui.com",
   "repository": {
     "type": "git",

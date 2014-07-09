@@ -162,7 +162,10 @@ var elasticui;
 
                 directive.controller = elasticui.controllers.IndexController;
                 directive.link = function (scope, element, attrs, indexCtrl) {
-                    indexCtrl.indexVM.index = attrs.euiIndex;
+                    scope.$watch(attrs.euiIndex, function (val) {
+                        indexCtrl.indexVM.index = val;
+                    });
+                    indexCtrl.indexVM.index = scope.$eval(attrs.euiIndex);
                 };
                 return directive;
             }
