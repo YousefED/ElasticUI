@@ -7,7 +7,10 @@ module elasticui.directives {
 
             directive.controller = controllers.IndexController;
             directive.link = function (scope, element, attrs: any, indexCtrl: controllers.IndexController) {
-                indexCtrl.indexVM.index = attrs.euiIndex;
+                scope.$watch(attrs.euiIndex, (val) => {
+                    indexCtrl.indexVM.index = val;
+                });
+                indexCtrl.indexVM.index = scope.$eval(attrs.euiIndex);
             }
             return directive;
         }
