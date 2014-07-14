@@ -1,3 +1,6 @@
+## 0.0.3 (2014-07-14)
+- sorting.enabled is now being watched and can be dynamically updated (not just on start)
+
 ## 0.0.2 (2014-07-09)
 - Fix for "Update index dynamically #1" - makes euiIndex more in sync with other directives
 

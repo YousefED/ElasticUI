@@ -190,6 +190,7 @@ declare module elasticui.controllers {
         public init(): void;
         private updateSort();
         public updateEnabled(): void;
+        public isEnabledOnIndexScope(): boolean;
     }
 }
 declare module elasticui.services {
