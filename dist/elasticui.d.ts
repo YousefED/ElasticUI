@@ -138,6 +138,7 @@ declare module elasticui.controllers {
     interface IIndexViewModel {
         query: any;
         sort: any;
+        highlight: any;
         loaded: boolean;
         loading: boolean;
         page: number;
@@ -222,6 +223,22 @@ declare module elasticui.widgets.directives {
     }
 }
 declare module elasticui.controllers {
+    interface IHighlightScope extends IIndexScope {
+        highlighting: {
+            highlight: any;
+            enabled: boolean;
+        };
+    }
+    class HighlightController {
+        private scope;
+        static $inject: string[];
+        constructor($scope: IHighlightScope);
+        public init(): void;
+        private updateHighlight();
+        public updateEnabled(): void;
+    }
+}
+declare module elasticui.controllers {
     interface IQueryScope extends IIndexScope {
         query: {
             query: any;
@@ -234,6 +251,11 @@ declare module elasticui.controllers {
         constructor($scope: IQueryScope);
         public init(): void;
         private updateQuery();
+    }
+}
+declare module elasticui.directives {
+    class HighlightDirective {
+        constructor();
     }
 }
 declare module elasticui.directives {

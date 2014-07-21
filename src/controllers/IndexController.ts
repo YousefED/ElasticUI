@@ -1,8 +1,8 @@
 module elasticui.controllers {
     export class IndexController {
-        
+
         private aggregations: any[] = [];
-        
+
         private es: services.ElasticService;
 
         public filters = new elasticui.util.FilterCollection();
@@ -10,6 +10,7 @@ module elasticui.controllers {
         public indexVM: IIndexViewModel = {
             query: null,
             sort: null,
+            highlight: null,
             loaded: false,
             page: 1,
             index: null,
@@ -46,6 +47,7 @@ module elasticui.controllers {
             $scope.$watch('indexVM.page', () => this.search());
             $scope.$watch('indexVM.index', () => this.search());
             $scope.$watch('indexVM.query', () => this.search());
+            $scope.$watch('indexVM.highlight', () => this.search());
 
             $timeout(() => this.loaded(), 200); // TODO: find better way to recognize loading of app
         }
@@ -74,8 +76,12 @@ module elasticui.controllers {
                 request.sort(this.indexVM.sort);
             }
 
+            if (this.indexVM.highlight != null) {
+                request.highlight(this.indexVM.highlight);
+            }
+
             //console.log("request to ES");
-            
+
             var res = this.es.client.search({
                 index: this.indexVM.index,
                 size: this.indexVM.pageSize,
@@ -102,7 +108,7 @@ module elasticui.controllers {
             this.searchPromise.then((body) => {
                 this.searchPromise = null;
                 this.onResult(body)
-            });  
+            });
         }
 
         public refreshIfDocCountChanged() {
