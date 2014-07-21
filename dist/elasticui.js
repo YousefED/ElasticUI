@@ -580,6 +580,7 @@ var elasticui;
                 this.indexVM = {
                     query: null,
                     sort: null,
+                    highlight: null,
                     loaded: false,
                     page: 1,
                     index: null,
@@ -617,6 +618,9 @@ var elasticui;
                     return _this.search();
                 });
                 $scope.$watch('indexVM.query', function () {
+                    return _this.search();
+                });
+                $scope.$watch('indexVM.highlight', function () {
                     return _this.search();
                 });
 
@@ -657,6 +661,10 @@ var elasticui;
 
                 if (this.indexVM.sort != null) {
                     request.sort(this.indexVM.sort);
+                }
+
+                if (this.indexVM.highlight != null) {
+                    request.highlight(this.indexVM.highlight);
                 }
 
                 var res = this.es.client.search({
@@ -930,6 +938,43 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (controllers) {
+        var HighlightController = (function () {
+            function HighlightController($scope) {
+                this.scope = $scope;
+            }
+            HighlightController.prototype.init = function () {
+                var _this = this;
+                this.scope.$watch('indexVM.highlight', function () {
+                    return _this.updateEnabled();
+                });
+                this.scope.$watch('highlighting.highlight', function () {
+                    return _this.updateHighlight();
+                });
+                this.scope.$watch('highlighting.enabled', function () {
+                    return _this.updateHighlight();
+                });
+                this.updateHighlight();
+            };
+
+            HighlightController.prototype.updateHighlight = function () {
+                if (this.scope.highlighting.enabled) {
+                    this.scope.indexVM.highlight = this.scope.highlighting.highlight;
+                }
+            };
+
+            HighlightController.prototype.updateEnabled = function () {
+                this.scope.highlighting.enabled = this.scope.indexVM.highlight != null && angular.equals(this.scope.indexVM.highlight.toJSON(), this.scope.highlighting.highlight.toJSON());
+            };
+            HighlightController.$inject = ['$scope'];
+            return HighlightController;
+        })();
+        controllers.HighlightController = HighlightController;
+    })(elasticui.controllers || (elasticui.controllers = {}));
+    var controllers = elasticui.controllers;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (controllers) {
         var QueryController = (function () {
             function QueryController($scope) {
                 this.scope = $scope;
@@ -966,6 +1011,46 @@ var elasticui;
         controllers.QueryController = QueryController;
     })(elasticui.controllers || (elasticui.controllers = {}));
     var controllers = elasticui.controllers;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (directives) {
+        var HighlightDirective = (function () {
+            function HighlightDirective() {
+                var directive = {};
+                directive.restrict = 'A';
+                directive.scope = true;
+
+                directive.controller = elasticui.controllers.HighlightController;
+                directive.link = function (scope, element, attrs, highlightCtrl) {
+                    scope.$watch(element.attr('eui-highlight') + " | euiCached", function (val) {
+                        return scope.highlighting.highlight = val;
+                    });
+
+                    var enabled = false;
+                    var enabledAttr = element.attr('eui-enabled');
+                    if (enabledAttr) {
+                        scope.$watch(enabledAttr, function (val) {
+                            return scope.highlighting.enabled = val;
+                        });
+                        enabled = scope.$eval(enabledAttr);
+                    }
+
+                    scope.highlighting = {
+                        highlight: scope.$eval(element.attr('eui-highlight') + " | euiCached"),
+                        enabled: enabled
+                    };
+
+                    highlightCtrl.init();
+                };
+                return directive;
+            }
+            return HighlightDirective;
+        })();
+        directives.HighlightDirective = HighlightDirective;
+        directives.directives.directive('euiHighlight', HighlightDirective);
+    })(elasticui.directives || (elasticui.directives = {}));
+    var directives = elasticui.directives;
 })(elasticui || (elasticui = {}));
 var elasticui;
 (function (elasticui) {

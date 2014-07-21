@@ -6,6 +6,7 @@
     export interface IIndexViewModel {
         query: any;
         sort: any;
+        highlight: any;
         loaded: boolean;
         loading: boolean;
         page: number;

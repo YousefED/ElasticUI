@@ -1,5 +1,5 @@
 ﻿**The concept of ElasticUI is to have one "view" of your index to which you can add aggregations, 
-sorting, paging, filters by adding directives in your app. 
+sorting, paging, filters, highlighting by adding directives in your app. 
 ElasticUI defines the following directives for this:**
 
 euiIndex
@@ -73,10 +73,25 @@ Creates a new inherited scope containing a **sorting** object. Use the property 
 *euiEnabled (optional)*: See below
 
 
+euiHighlight
+---
+Allows to highlight search results on one or more fields, e.g.:
+
+    <body eui-highlight="ejs.Highlight(field).preTags('<mark>').postTags('</mark>')" eui-enabled="true">
+
+**Scope**
+
+Creates a new inherited scope containing a **highlight** object. Use the property **enabled** to activate the highlighting.
+
+**Attributes**
+
+*euiEnabled (optional)*: See below
+
+
 Attribute euiEnabled
 ---
-On directives supporting *eui-enabled* (*euiSort*, *euiFilter*, *euiQuery*), 
-you can use this attribute instead of manipulating *scope.(sorting|query|filter).enabled* to enable the sort/query/filter.
+On directives supporting *eui-enabled* (*euiSort*, *euiFilter*, *euiQuery*, *euiHighlight*), 
+you can use this attribute instead of manipulating *scope.(sorting|query|filter|highlight).enabled* to enable the sort/query/filter/highlight.
 
 
 euiOrFilter
