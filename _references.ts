@@ -37,8 +37,8 @@
 /// <reference path="src/main.ts" />
 
 /// <reference path="src/widgets/directives/directives.ts" />
-/// <reference path="src/widgets/directives/checklistdirective.ts" />
-/// <reference path="src/widgets/directives/simplepagingdirective.ts" />
-/// <reference path="src/widgets/directives/singleselectdirective.ts" />
+/// <reference path="src/widgets/directives/ChecklistDirective.ts" />
+/// <reference path="src/widgets/directives/SimplePagingDirective.ts" />
+/// <reference path="src/widgets/directives/SingleselectDirective.ts" />
 
 
