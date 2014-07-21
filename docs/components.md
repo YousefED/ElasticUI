@@ -81,7 +81,7 @@ Allows to highlight search results on one or more fields, e.g.:
 
 **Scope**
 
-Creates a new inherited scope containing a **highlight** object. Use the property **enabled** to activate the highlighting.
+Creates a new inherited scope containing a **highlighting** object. Use the property **enabled** to activate the highlighting.
 
 **Attributes**
 

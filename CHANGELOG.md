@@ -1,3 +1,6 @@
+## 0.0.4 (2014-07-21)
+Added support for highlighting. Thanks to @mathroc!  
+
 ## 0.0.3 (2014-07-14)
 - sorting.enabled is now being watched and can be dynamically updated (not just on start)
 

@@ -236,6 +236,7 @@ declare module elasticui.controllers {
         public init(): void;
         private updateHighlight();
         public updateEnabled(): void;
+        public isEnabledOnIndexScope(): boolean;
     }
 }
 declare module elasticui.controllers {

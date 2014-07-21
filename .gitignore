@@ -182,4 +182,5 @@ docs/widgets.html
 CONTRIBUTING.html
 docs/components.html
 CHANGELOG.html
-examples/demo/demo.local.html
+*.local.html
+*.db
