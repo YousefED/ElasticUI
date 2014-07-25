@@ -4,6 +4,7 @@
     }
 
     export interface IIndexViewModel {
+        host: any;
         query: any;
         sort: any;
         highlight: any;

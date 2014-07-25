@@ -8,6 +8,7 @@ module elasticui.controllers {
         public filters = new elasticui.util.FilterCollection();
 
         public indexVM: IIndexViewModel = {
+            host: null,
             query: null,
             sort: null,
             highlight: null,
@@ -43,6 +44,7 @@ module elasticui.controllers {
             $scope.mainController = this;
             $scope.filters = this.filters;
             $scope.$watchCollection('filters.filters', () => { this.indexVM.page = 1; this.search() });
+            $scope.$watch('indexVM.host', () => { es.setHost($scope.indexVM.host) && this.search() });
             $scope.$watch('indexVM.sort', () => { this.indexVM.page = 1; this.search() });
             $scope.$watch('indexVM.page', () => this.search());
             $scope.$watch('indexVM.index', () => this.search());
