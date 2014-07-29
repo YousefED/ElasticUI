@@ -136,6 +136,7 @@ declare module elasticui.controllers {
         indexVM: IIndexViewModel;
     }
     interface IIndexViewModel {
+        host: any;
         query: any;
         sort: any;
         highlight: any;
@@ -197,8 +198,11 @@ declare module elasticui.controllers {
 declare module elasticui.services {
     class ElasticService {
         public client: any;
+        private esFactory;
+        private host;
         static $inject: string[];
         constructor(esFactory: any, euiHost: any);
+        public setHost(host: any): boolean;
     }
 }
 declare module elasticui.widgets.directives {
@@ -240,6 +244,19 @@ declare module elasticui.controllers {
     }
 }
 declare module elasticui.controllers {
+    interface IHostScope extends IIndexScope {
+        host: any;
+    }
+    class HostController {
+        private scope;
+        static $inject: string[];
+        constructor($scope: IHostScope);
+        public init(): void;
+        private updateHost();
+        public readHost(): void;
+    }
+}
+declare module elasticui.controllers {
     interface IQueryScope extends IIndexScope {
         query: {
             query: any;
@@ -256,6 +273,11 @@ declare module elasticui.controllers {
 }
 declare module elasticui.directives {
     class HighlightDirective {
+        constructor();
+    }
+}
+declare module elasticui.directives {
+    class HostDirective {
         constructor();
     }
 }

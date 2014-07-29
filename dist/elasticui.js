@@ -578,6 +578,7 @@ var elasticui;
                 this.aggregations = [];
                 this.filters = new elasticui.util.FilterCollection();
                 this.indexVM = {
+                    host: null,
                     query: null,
                     sort: null,
                     highlight: null,
@@ -606,6 +607,9 @@ var elasticui;
                 $scope.$watchCollection('filters.filters', function () {
                     _this.indexVM.page = 1;
                     _this.search();
+                });
+                $scope.$watch('indexVM.host', function () {
+                    es.setHost($scope.indexVM.host) && _this.search();
                 });
                 $scope.$watch('indexVM.sort', function () {
                     _this.indexVM.page = 1;
@@ -806,10 +810,21 @@ var elasticui;
     (function (services) {
         var ElasticService = (function () {
             function ElasticService(esFactory, euiHost) {
-                this.client = esFactory({
-                    host: euiHost
-                });
+                this.esFactory = esFactory;
+                this.setHost(euiHost);
             }
+            ElasticService.prototype.setHost = function (host) {
+                if (host === this.host) {
+                    return false;
+                }
+
+                this.host = host;
+                this.client = this.esFactory({
+                    host: host
+                });
+
+                return true;
+            };
             ElasticService.$inject = ['esFactory', 'euiHost'];
             return ElasticService;
         })();
@@ -985,6 +1000,41 @@ var elasticui;
 var elasticui;
 (function (elasticui) {
     (function (controllers) {
+        var HostController = (function () {
+            function HostController($scope) {
+                this.scope = $scope;
+            }
+            HostController.prototype.init = function () {
+                var _this = this;
+                this.scope.$watch('indexVM.host', function () {
+                    return _this.readHost();
+                });
+                this.scope.$watch('host', function () {
+                    return _this.updateHost();
+                });
+
+                this.updateHost();
+            };
+
+            HostController.prototype.updateHost = function () {
+                if (this.scope.host !== null) {
+                    this.scope.indexVM.host = this.scope.host;
+                }
+            };
+
+            HostController.prototype.readHost = function () {
+                this.scope.host = this.scope.indexVM.host;
+            };
+            HostController.$inject = ['$scope'];
+            return HostController;
+        })();
+        controllers.HostController = HostController;
+    })(elasticui.controllers || (elasticui.controllers = {}));
+    var controllers = elasticui.controllers;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (controllers) {
         var QueryController = (function () {
             function QueryController($scope) {
                 this.scope = $scope;
@@ -1059,6 +1109,34 @@ var elasticui;
         })();
         directives.HighlightDirective = HighlightDirective;
         directives.directives.directive('euiHighlight', HighlightDirective);
+    })(elasticui.directives || (elasticui.directives = {}));
+    var directives = elasticui.directives;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (directives) {
+        var HostDirective = (function () {
+            function HostDirective() {
+                var directive = {};
+                directive.restrict = 'A';
+                directive.scope = true;
+
+                directive.controller = elasticui.controllers.HostController;
+                directive.link = function (scope, element, attrs, hostCtrl) {
+                    scope.$watch(element.attr('eui-host'), function (val) {
+                        return scope.host = val;
+                    });
+
+                    scope.host = scope.$eval(element.attr('eui-host'));
+
+                    hostCtrl.init();
+                };
+                return directive;
+            }
+            return HostDirective;
+        })();
+        directives.HostDirective = HostDirective;
+        directives.directives.directive('euiHost', HostDirective);
     })(elasticui.directives || (elasticui.directives = {}));
     var directives = elasticui.directives;
 })(elasticui || (elasticui = {}));
