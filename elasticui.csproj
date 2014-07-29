@@ -20,12 +20,14 @@
     <TypeScriptCompile Include="lib\types\elastic.d.ts" />
     <TypeScriptCompile Include="src\controllers\AggregationController.ts" />
     <TypeScriptCompile Include="src\controllers\HighlightController.ts" />
+    <TypeScriptCompile Include="src\controllers\HostController.ts" />
     <TypeScriptCompile Include="src\controllers\QueryController.ts" />
     <TypeScriptCompile Include="src\controllers\IFilteredScope.ts" />
     <TypeScriptCompile Include="src\controllers\OrFilterController.ts" />
     <TypeScriptCompile Include="src\controllers\SortController.ts" />
     <TypeScriptCompile Include="src\controllers\IIndexScope.ts" />
     <TypeScriptCompile Include="src\directives\HighlightDirective.ts" />
+    <TypeScriptCompile Include="src\directives\HostDirective.ts" />
     <TypeScriptCompile Include="src\directives\QueryDirective.ts" />
     <TypeScriptCompile Include="src\directives\VarDirective.ts" />
     <TypeScriptCompile Include="src\directives\IndexDirective.ts" />

@@ -609,7 +609,9 @@ var elasticui;
                     _this.search();
                 });
                 $scope.$watch('indexVM.host', function () {
-                    es.setHost($scope.indexVM.host) && _this.search();
+                    if (_this.indexVM.host != null && es.setHost(_this.indexVM.host)) {
+                        _this.search();
+                    }
                 });
                 $scope.$watch('indexVM.sort', function () {
                     _this.indexVM.page = 1;
