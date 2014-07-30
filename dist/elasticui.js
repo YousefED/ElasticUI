@@ -573,7 +573,7 @@ var elasticui;
 (function (elasticui) {
     (function (controllers) {
         var IndexController = (function () {
-            function IndexController($scope, $timeout, $window, es) {
+            function IndexController($scope, $timeout, $window, es, $rootScope) {
                 var _this = this;
                 this.aggregations = [];
                 this.filters = new elasticui.util.FilterCollection();
@@ -599,6 +599,7 @@ var elasticui;
                 this.searchPromise = null;
                 this.refreshPromise = null;
                 this.es = es;
+                this.$rootScope = $rootScope;
 
                 $scope.indexVM = this.indexVM;
                 $scope.ejs = $window.ejs;
@@ -680,6 +681,14 @@ var elasticui;
                     body: request
                 });
 
+                var abort = res.abort;
+
+                res = res.then(null, function (err) {
+                    this.$rootScope.$broadcast('eui-search-error', err);
+                }.bind(this));
+
+                res.abort = abort;
+
                 return res;
             };
 
@@ -721,7 +730,7 @@ var elasticui;
                 }
                 this.indexVM.loading = false;
             };
-            IndexController.$inject = ['$scope', '$timeout', '$window', 'es'];
+            IndexController.$inject = ['$scope', '$timeout', '$window', 'es', '$rootScope'];
             return IndexController;
         })();
         controllers.IndexController = IndexController;
