@@ -5,6 +5,8 @@ module elasticui.controllers {
 
         private es: services.ElasticService;
 
+        private $rootScope: any;
+
         public filters = new elasticui.util.FilterCollection();
 
         public indexVM: IIndexViewModel = {
@@ -35,9 +37,10 @@ module elasticui.controllers {
             this.search();
         }
 
-        static $inject = ['$scope', '$timeout', '$window', 'es'];
-        constructor($scope, $timeout, $window, es: services.ElasticService) {
+        static $inject = ['$scope', '$timeout', '$window', 'es', '$rootScope'];
+        constructor($scope, $timeout, $window, es: services.ElasticService, $rootScope) {
             this.es = es;
+            this.$rootScope = $rootScope;
 
             $scope.indexVM = this.indexVM;
             $scope.ejs = $window.ejs; // so we can use ejs in attributes etc. TODO: better to have a ejs service instead of loading from window
@@ -90,6 +93,14 @@ module elasticui.controllers {
                 from: this.indexVM.pageSize * (this.indexVM.page-1),
                 body: request
             });
+
+            var abort = res.abort;
+
+            res = res.then(null, function(err) {
+                this.$rootScope.$broadcast('eui-search-error', err);
+            }.bind(this));
+
+            res.abort = abort;
 
             return res;
         }
