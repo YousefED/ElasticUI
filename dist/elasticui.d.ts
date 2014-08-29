@@ -155,12 +155,13 @@ declare module elasticui.controllers {
     class IndexController {
         private aggregations;
         private es;
+        private $rootScope;
         public filters: util.FilterCollection;
         public indexVM: IIndexViewModel;
         public loaded(): void;
         public addAggregationProvider(aggProvider: any): void;
         static $inject: string[];
-        constructor($scope: any, $timeout: any, $window: any, es: services.ElasticService);
+        constructor($scope: any, $timeout: any, $window: any, es: services.ElasticService, $rootScope: any);
         private getSearchPromise();
         private searchPromise;
         private refreshPromise;
