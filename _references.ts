@@ -1,3 +1,4 @@
+/// <reference path="src/util/EjsCollection.ts" />
 /// <reference path="src/util/FilterCollection.ts" />
 /// <reference path="src/util/FilterTool.ts" />
 

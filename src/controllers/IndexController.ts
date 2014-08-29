@@ -1,8 +1,5 @@
 module elasticui.controllers {
     export class IndexController {
-
-        private aggregations: any[] = [];
-
         private es: services.ElasticService;
 
         public filters = new elasticui.util.FilterCollection();
@@ -11,6 +8,8 @@ module elasticui.controllers {
             host: null,
             query: null,
             sort: null,
+            aggregationProviders: new elasticui.util.SimpleSet(),
+            filters: this.filters,
             highlight: null,
             loaded: false,
             page: 1,
@@ -19,7 +18,6 @@ module elasticui.controllers {
             pageCount: 0,
             pageSize: 10,
             results: null,
-            addAggregationProvider: (aggProvider) => this.addAggregationProvider(aggProvider),
             refresh: () => this.refreshIfDocCountChanged()
         };
 
@@ -30,20 +28,15 @@ module elasticui.controllers {
             }
         }
 
-        public addAggregationProvider(aggProvider) {
-            this.aggregations.push(aggProvider);
-            this.search();
-        }
-
         static $inject = ['$scope', '$timeout', '$window', 'es'];
-        constructor($scope, $timeout, $window, es: services.ElasticService) {
+        constructor($scope: IIndexScope, $timeout, $window, es: services.ElasticService) {
             this.es = es;
-
-            $scope.indexVM = this.indexVM;
             $scope.ejs = $window.ejs; // so we can use ejs in attributes etc. TODO: better to have a ejs service instead of loading from window
-            $scope.mainController = this;
             $scope.filters = this.filters;
-            $scope.$watchCollection('filters.filters', () => { this.indexVM.page = 1; this.search() });
+            $scope.indexVM = this.indexVM;
+            $scope.$watchCollection('indexVM.filters.ejsObjects', () => { this.indexVM.page = 1; this.search() });
+            $scope.$watchCollection('indexVM.aggregationProviders.objects', () => this.search());
+
             $scope.$watch('indexVM.host', () => { if (this.indexVM.host != null && es.setHost(this.indexVM.host)) { this.search(); } });
             $scope.$watch('indexVM.sort', () => { this.indexVM.page = 1; this.search() });
             $scope.$watch('indexVM.page', () => this.search());
@@ -57,8 +50,9 @@ module elasticui.controllers {
         private getSearchPromise() {
             var request = ejs.Request();
 
-            for (var i = 0; i < this.aggregations.length; i++) {
-                var agg = this.aggregations[i].getAggregation(this.filters.filters);
+            for (var i = 0; i < this.indexVM.aggregationProviders.objects.length; i++) {
+                var provider = this.indexVM.aggregationProviders.objects[i];
+                var agg = provider(this.filters.ejsObjects);
                 request.agg(agg);
             }
 

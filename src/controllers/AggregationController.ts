@@ -1,28 +1,54 @@
 module elasticui.controllers {
     export interface IAggregationScope extends IIndexScope {
-        aggResult: any;    
+        aggResult: any;
+        aggregation: {
+            agg: any;
+            filterSelf: boolean;
+        }
     }
 
     export class AggregationController{
-        public agg: any;
-        public filterSelf: boolean = true;
-
         private scope: IAggregationScope;
+        private previousProvider: any;
 
         static $inject = ['$scope'];
         constructor($scope: IAggregationScope) {
             this.scope = $scope;
-            $scope.$parent.$watch('indexVM.results', () => this.updateResults());
         }
 
-        private getAggName() {
-            return Object.keys(this.agg.toJSON())[0];
+        public init() {
+            this.scope.$parent.$watch('indexVM.results', () => this.updateResults());
+            this.scope.$watch('aggregation.agg', (newVal, oldVal) => {
+                if (!util.EjsTool.equals(oldVal, newVal)) {
+                    if (this.previousProvider) {
+                        this.scope.indexVM.aggregationProviders.remove(this.previousProvider);
+                    }
+                    this.updateAgg();
+                }
+            });
+
+            this.scope.$watch('aggregation.filterSelf', (newVal, oldVal) => {
+                if (newVal !== oldVal) {
+                    if (this.previousProvider) {
+                        this.scope.indexVM.aggregationProviders.remove(this.previousProvider);
+                    }
+                    this.updateAgg();
+                }
+            });
+
+            this.scope.$on('$destroy', () => {
+                if (this.previousProvider) {
+                    this.scope.indexVM.aggregationProviders.remove(this.previousProvider);
+                }
+            });
+
+            this.updateAgg();
         }
 
         private updateResults() {
             var res = this.scope.indexVM.results;
-            if (this.agg && res && res.aggregations) {
-                var name = this.getAggName();
+            if (this.scope.aggregation.agg && res && res.aggregations) {
+                var name = AggregationController.getAggName(this.scope.aggregation.agg);
                 
                 var aggKey = Object.keys(res.aggregations).filter(key => key == name || key == "filtered_" + name)[0];
                 var agg = res.aggregations[aggKey];
@@ -33,29 +59,44 @@ module elasticui.controllers {
             }
         }
 
-        public setFilterSelf(filterSelf: boolean = true) {
-            this.filterSelf = filterSelf;
+        public updateAgg() {
+            var provider = null;
+
+            if (this.scope.aggregation.agg) {
+                provider = (filters: any[]): any => this.getAggregation(filters);
+            }
+
+            if (provider) {
+                this.scope.indexVM.aggregationProviders.add(provider);
+            }
+
+            this.previousProvider = provider;
         }
 
-        public setAggregation(agg: any) {
-            this.agg = agg;
-            this.scope.indexVM.addAggregationProvider(this);
+        private static getAggName(ejsAggregation: any) {
+            return Object.keys(ejsAggregation.toJSON())[0];
         }
 
-        public getAggregation(filters: any[]) {
-            var rootAgg = this.agg;
+        public getAggregationExplicit(ejsAggregation: any, filterSelf: boolean, filters: any[]): any {
+            if (!ejsAggregation) {
+                return null;
+            }
 
             var facetFilters = filters;
-            if (!this.filterSelf) {
+            if (!filterSelf) {
                 facetFilters = facetFilters.filter(
-                    (val) => val != (<any>this.scope).combinedFilter && (typeof val.field === "undefined" || val.field() != this.agg.field()));
+                    (val) => val != (<any>this.scope).combinedFilter && (typeof val.field === "undefined" || val.field() != ejsAggregation.field()));
             }
 
-            var combined = util.FilterTool.combineFilters(facetFilters);
-            if (combined != null) {
-                rootAgg = new ejs.FilterAggregation("filtered_" + this.getAggName()).filter(combined).agg(this.agg);
+            var combinedFilters = util.FilterTool.combineFilters(facetFilters);
+            if (combinedFilters != null) {
+                ejsAggregation = new ejs.FilterAggregation("filtered_" + AggregationController.getAggName(ejsAggregation)).filter(combinedFilters).agg(ejsAggregation);
             }
-            return rootAgg;
+            return ejsAggregation;
+        }
+
+        public getAggregation(filters: any[]): any {
+            return this.getAggregationExplicit(this.scope.aggregation.agg, this.scope.aggregation.filterSelf, filters);
         }
     }
 }

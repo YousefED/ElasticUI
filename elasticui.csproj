@@ -43,6 +43,8 @@
     <TypeScriptCompile Include="src\filters\PageRangeFilter.ts" />
     <TypeScriptCompile Include="src\filters\RangeFilter.ts" />
     <TypeScriptCompile Include="src\services\ElasticService.ts" />
+    <TypeScriptCompile Include="src\util\EjsCollection.ts" />
+    <TypeScriptCompile Include="src\util\SimpleSet.ts" />
     <TypeScriptCompile Include="src\util\FilterCollection.ts" />
     <TypeScriptCompile Include="src\util\AngularTool.ts" />
     <TypeScriptCompile Include="src\util\EjsTool.ts" />

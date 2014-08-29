@@ -8,10 +8,21 @@ module elasticui.directives {
 
             directive.controller = controllers.AggregationController;
             directive.link = function (scope, element, attrs: any, aggCtrl) {
-                var agg = scope.$eval(attrs.euiAggregation);
-                var filterSelf = scope.$eval(attrs.euiFilterSelf);
-                aggCtrl.setFilterSelf(filterSelf);
-                aggCtrl.setAggregation(agg);
+                scope.$watch(element.attr('eui-aggregation') + " | euiCached", (val) => scope.aggregation.agg = val);
+
+                var filterSelf = true;
+                var filterSelfAttr = element.attr('eui-filter-self');
+                if (filterSelfAttr) {
+                    scope.$watch(filterSelfAttr, (val) => scope.aggregation.filterSelf = val);
+                    filterSelf = scope.$eval(filterSelfAttr);
+                }
+
+                scope.aggregation = {
+                    agg: scope.$eval(element.attr('eui-aggregation') + " | euiCached"),
+                    filterSelf: filterSelf
+                };
+
+                aggCtrl.init();
             }
             return directive;
         }

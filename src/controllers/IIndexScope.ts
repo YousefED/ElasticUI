@@ -1,12 +1,15 @@
 ﻿module elasticui.controllers {
     export interface IIndexScope extends IFilteredScope {
         indexVM: IIndexViewModel;
+        ejs: any;
     }
 
     export interface IIndexViewModel {
         host: any;
         query: any;
         sort: any;
+        aggregationProviders: util.SimpleSet;
+        filters: util.FilterCollection;
         highlight: any;
         loaded: boolean;
         loading: boolean;
@@ -15,7 +18,6 @@
         pageCount: number;
         pageSize: number;
         results: any;
-        addAggregationProvider: (any) => void;
         refresh: () => void;
     }
 }

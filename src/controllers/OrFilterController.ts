@@ -6,7 +6,7 @@ module elasticui.controllers {
         static $inject = ['$scope'];
         constructor($scope: any){
             $scope.filters = this.filters;
-            $scope.$watchCollection('filters.filters', () => this.updateCombinedFilter());    
+            $scope.$watchCollection('filters.ejsObjects', () => this.updateCombinedFilter());    
             
             this.scope = $scope;
         }

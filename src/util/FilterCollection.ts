@@ -1,38 +1,15 @@
 ﻿module elasticui.util {
-    export class FilterCollection {
-        public filters = [];
-        private jsonFilters = [];
-
-        private getFilterIndex(filter) {
-            return this.jsonFilters.indexOf(EjsTool.getJsonFromEjsObject(filter));
-        }
-
-        public add(filter: any) {
-            var idx = this.getFilterIndex(filter);
-            if (idx == -1) {
-                this.filters.push(filter);
-                this.jsonFilters.push(EjsTool.getJsonFromEjsObject(filter));
-            }
-        }
-
-        public remove(filter: any) {
-            var idx = this.getFilterIndex(filter);
-            if (idx > -1) {
-                this.filters.splice(idx, 1);
-                this.jsonFilters.splice(idx, 1);
-            }
-        }
-
+    export class FilterCollection extends EjsCollection {
         public getAsFilter(): any [] {
-            return FilterTool.combineFilters(this.filters);
+            return FilterTool.combineFilters(this.ejsObjects);
         }
 
         public getAsORFilter(): any[] {
-            return FilterTool.combineFiltersShould(this.filters);
+            return FilterTool.combineFiltersShould(this.ejsObjects);
         }
 
         public contains(filter: any): boolean {
-            return this.getFilterIndex(filter) > -1;
+            return this.indexOf(filter) > -1;
         }
     }
 }
