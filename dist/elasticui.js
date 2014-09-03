@@ -1,44 +1,63 @@
 ﻿var elasticui;
 (function (elasticui) {
     (function (util) {
-        var FilterCollection = (function () {
-            function FilterCollection() {
-                this.filters = [];
-                this.jsonFilters = [];
+        var EjsCollection = (function () {
+            function EjsCollection() {
+                this.ejsObjects = [];
+                this.jsonObjects = [];
             }
-            FilterCollection.prototype.getFilterIndex = function (filter) {
-                return this.jsonFilters.indexOf(util.EjsTool.getJsonFromEjsObject(filter));
+            EjsCollection.prototype.indexOf = function (ejsObject) {
+                return this.jsonObjects.indexOf(util.EjsTool.getJsonFromEjsObject(ejsObject));
             };
 
-            FilterCollection.prototype.add = function (filter) {
-                var idx = this.getFilterIndex(filter);
+            EjsCollection.prototype.add = function (ejsObject) {
+                var idx = this.indexOf(ejsObject);
                 if (idx == -1) {
-                    this.filters.push(filter);
-                    this.jsonFilters.push(util.EjsTool.getJsonFromEjsObject(filter));
+                    this.ejsObjects.push(ejsObject);
+                    this.jsonObjects.push(util.EjsTool.getJsonFromEjsObject(ejsObject));
                 }
             };
 
-            FilterCollection.prototype.remove = function (filter) {
-                var idx = this.getFilterIndex(filter);
+            EjsCollection.prototype.remove = function (ejsObject) {
+                var idx = this.indexOf(ejsObject);
                 if (idx > -1) {
-                    this.filters.splice(idx, 1);
-                    this.jsonFilters.splice(idx, 1);
+                    this.ejsObjects.splice(idx, 1);
+                    this.jsonObjects.splice(idx, 1);
                 }
             };
-
+            return EjsCollection;
+        })();
+        util.EjsCollection = EjsCollection;
+    })(elasticui.util || (elasticui.util = {}));
+    var util = elasticui.util;
+})(elasticui || (elasticui = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var elasticui;
+(function (elasticui) {
+    (function (util) {
+        var FilterCollection = (function (_super) {
+            __extends(FilterCollection, _super);
+            function FilterCollection() {
+                _super.apply(this, arguments);
+            }
             FilterCollection.prototype.getAsFilter = function () {
-                return util.FilterTool.combineFilters(this.filters);
+                return util.FilterTool.combineFilters(this.ejsObjects);
             };
 
             FilterCollection.prototype.getAsORFilter = function () {
-                return util.FilterTool.combineFiltersShould(this.filters);
+                return util.FilterTool.combineFiltersShould(this.ejsObjects);
             };
 
             FilterCollection.prototype.contains = function (filter) {
-                return this.getFilterIndex(filter) > -1;
+                return this.indexOf(filter) > -1;
             };
             return FilterCollection;
-        })();
+        })(util.EjsCollection);
         util.FilterCollection = FilterCollection;
     })(elasticui.util || (elasticui.util = {}));
     var util = elasticui.util;
@@ -98,10 +117,25 @@ var elasticui;
 
                 directive.controller = elasticui.controllers.AggregationController;
                 directive.link = function (scope, element, attrs, aggCtrl) {
-                    var agg = scope.$eval(attrs.euiAggregation);
-                    var filterSelf = scope.$eval(attrs.euiFilterSelf);
-                    aggCtrl.setFilterSelf(filterSelf);
-                    aggCtrl.setAggregation(agg);
+                    scope.$watch(element.attr('eui-aggregation') + " | euiCached", function (val) {
+                        return scope.aggregation.agg = val;
+                    });
+
+                    var filterSelf = true;
+                    var filterSelfAttr = element.attr('eui-filter-self');
+                    if (filterSelfAttr) {
+                        scope.$watch(filterSelfAttr, function (val) {
+                            return scope.aggregation.filterSelf = val;
+                        });
+                        filterSelf = scope.$eval(filterSelfAttr);
+                    }
+
+                    scope.aggregation = {
+                        agg: scope.$eval(element.attr('eui-aggregation') + " | euiCached"),
+                        filterSelf: filterSelf
+                    };
+
+                    aggCtrl.init();
                 };
                 return directive;
             }
@@ -456,21 +490,44 @@ var elasticui;
     (function (controllers) {
         var AggregationController = (function () {
             function AggregationController($scope) {
-                var _this = this;
-                this.filterSelf = true;
                 this.scope = $scope;
-                $scope.$parent.$watch('indexVM.results', function () {
+            }
+            AggregationController.prototype.init = function () {
+                var _this = this;
+                this.scope.$parent.$watch('indexVM.results', function () {
                     return _this.updateResults();
                 });
-            }
-            AggregationController.prototype.getAggName = function () {
-                return Object.keys(this.agg.toJSON())[0];
+                this.scope.$watch('aggregation.agg', function (newVal, oldVal) {
+                    if (!elasticui.util.EjsTool.equals(oldVal, newVal)) {
+                        if (_this.previousProvider) {
+                            _this.scope.indexVM.aggregationProviders.remove(_this.previousProvider);
+                        }
+                        _this.updateAgg();
+                    }
+                });
+
+                this.scope.$watch('aggregation.filterSelf', function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        if (_this.previousProvider) {
+                            _this.scope.indexVM.aggregationProviders.remove(_this.previousProvider);
+                        }
+                        _this.updateAgg();
+                    }
+                });
+
+                this.scope.$on('$destroy', function () {
+                    if (_this.previousProvider) {
+                        _this.scope.indexVM.aggregationProviders.remove(_this.previousProvider);
+                    }
+                });
+
+                this.updateAgg();
             };
 
             AggregationController.prototype.updateResults = function () {
                 var res = this.scope.indexVM.results;
-                if (this.agg && res && res.aggregations) {
-                    var name = this.getAggName();
+                if (this.scope.aggregation.agg && res && res.aggregations) {
+                    var name = AggregationController.getAggName(this.scope.aggregation.agg);
 
                     var aggKey = Object.keys(res.aggregations).filter(function (key) {
                         return key == name || key == "filtered_" + name;
@@ -483,32 +540,49 @@ var elasticui;
                 }
             };
 
-            AggregationController.prototype.setFilterSelf = function (filterSelf) {
-                if (typeof filterSelf === "undefined") { filterSelf = true; }
-                this.filterSelf = filterSelf;
-            };
-
-            AggregationController.prototype.setAggregation = function (agg) {
-                this.agg = agg;
-                this.scope.indexVM.addAggregationProvider(this);
-            };
-
-            AggregationController.prototype.getAggregation = function (filters) {
+            AggregationController.prototype.updateAgg = function () {
                 var _this = this;
-                var rootAgg = this.agg;
+                var provider = null;
+
+                if (this.scope.aggregation.agg) {
+                    provider = function (filters) {
+                        return _this.getAggregation(filters);
+                    };
+                }
+
+                if (provider) {
+                    this.scope.indexVM.aggregationProviders.add(provider);
+                }
+
+                this.previousProvider = provider;
+            };
+
+            AggregationController.getAggName = function (ejsAggregation) {
+                return Object.keys(ejsAggregation.toJSON())[0];
+            };
+
+            AggregationController.prototype.getAggregationExplicit = function (ejsAggregation, filterSelf, filters) {
+                var _this = this;
+                if (!ejsAggregation) {
+                    return null;
+                }
 
                 var facetFilters = filters;
-                if (!this.filterSelf) {
+                if (!filterSelf) {
                     facetFilters = facetFilters.filter(function (val) {
-                        return val != _this.scope.combinedFilter && (typeof val.field === "undefined" || val.field() != _this.agg.field());
+                        return val != _this.scope.combinedFilter && (typeof val.field === "undefined" || val.field() != ejsAggregation.field());
                     });
                 }
 
-                var combined = elasticui.util.FilterTool.combineFilters(facetFilters);
-                if (combined != null) {
-                    rootAgg = new ejs.FilterAggregation("filtered_" + this.getAggName()).filter(combined).agg(this.agg);
+                var combinedFilters = elasticui.util.FilterTool.combineFilters(facetFilters);
+                if (combinedFilters != null) {
+                    ejsAggregation = new ejs.FilterAggregation("filtered_" + AggregationController.getAggName(ejsAggregation)).filter(combinedFilters).agg(ejsAggregation);
                 }
-                return rootAgg;
+                return ejsAggregation;
+            };
+
+            AggregationController.prototype.getAggregation = function (filters) {
+                return this.getAggregationExplicit(this.scope.aggregation.agg, this.scope.aggregation.filterSelf, filters);
             };
             AggregationController.$inject = ['$scope'];
             return AggregationController;
@@ -575,12 +649,13 @@ var elasticui;
         var IndexController = (function () {
             function IndexController($scope, $timeout, $window, es, $rootScope) {
                 var _this = this;
-                this.aggregations = [];
                 this.filters = new elasticui.util.FilterCollection();
                 this.indexVM = {
                     host: null,
                     query: null,
                     sort: null,
+                    aggregationProviders: new elasticui.util.SimpleSet(),
+                    filters: this.filters,
                     highlight: null,
                     loaded: false,
                     page: 1,
@@ -589,9 +664,6 @@ var elasticui;
                     pageCount: 0,
                     pageSize: 10,
                     results: null,
-                    addAggregationProvider: function (aggProvider) {
-                        return _this.addAggregationProvider(aggProvider);
-                    },
                     refresh: function () {
                         return _this.refreshIfDocCountChanged();
                     }
@@ -603,12 +675,15 @@ var elasticui;
 
                 $scope.indexVM = this.indexVM;
                 $scope.ejs = $window.ejs;
-                $scope.mainController = this;
                 $scope.filters = this.filters;
-                $scope.$watchCollection('filters.filters', function () {
+                $scope.$watchCollection('indexVM.filters.ejsObjects', function () {
                     _this.indexVM.page = 1;
                     _this.search();
                 });
+                $scope.$watchCollection('indexVM.aggregationProviders.objects', function () {
+                    return _this.search();
+                });
+
                 $scope.$watch('indexVM.host', function () {
                     if (_this.indexVM.host != null && es.setHost(_this.indexVM.host)) {
                         _this.search();
@@ -642,16 +717,12 @@ var elasticui;
                 }
             };
 
-            IndexController.prototype.addAggregationProvider = function (aggProvider) {
-                this.aggregations.push(aggProvider);
-                this.search();
-            };
-
             IndexController.prototype.getSearchPromise = function () {
                 var request = ejs.Request();
 
-                for (var i = 0; i < this.aggregations.length; i++) {
-                    var agg = this.aggregations[i].getAggregation(this.filters.filters);
+                for (var i = 0; i < this.indexVM.aggregationProviders.objects.length; i++) {
+                    var provider = this.indexVM.aggregationProviders.objects[i];
+                    var agg = provider(this.filters.ejsObjects);
                     request.agg(agg);
                 }
 
@@ -745,7 +816,7 @@ var elasticui;
                 var _this = this;
                 this.filters = new elasticui.util.FilterCollection();
                 $scope.filters = this.filters;
-                $scope.$watchCollection('filters.filters', function () {
+                $scope.$watchCollection('filters.ejsObjects', function () {
                     return _this.updateCombinedFilter();
                 });
 
@@ -1228,6 +1299,36 @@ var elasticui;
             return EjsTool;
         })();
         util.EjsTool = EjsTool;
+    })(elasticui.util || (elasticui.util = {}));
+    var util = elasticui.util;
+})(elasticui || (elasticui = {}));
+var elasticui;
+(function (elasticui) {
+    (function (util) {
+        var SimpleSet = (function () {
+            function SimpleSet() {
+                this.objects = [];
+            }
+            SimpleSet.prototype.indexOf = function (object) {
+                return this.objects.indexOf(object);
+            };
+
+            SimpleSet.prototype.add = function (object) {
+                var idx = this.indexOf(object);
+                if (idx == -1) {
+                    this.objects.push(object);
+                }
+            };
+
+            SimpleSet.prototype.remove = function (object) {
+                var idx = this.indexOf(object);
+                if (idx > -1) {
+                    this.objects.splice(idx, 1);
+                }
+            };
+            return SimpleSet;
+        })();
+        util.SimpleSet = SimpleSet;
     })(elasticui.util || (elasticui.util = {}));
     var util = elasticui.util;
 })(elasticui || (elasticui = {}));

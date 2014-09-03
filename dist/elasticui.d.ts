@@ -1,10 +1,14 @@
 ﻿declare module elasticui.util {
-    class FilterCollection {
-        public filters: any[];
-        private jsonFilters;
-        private getFilterIndex(filter);
-        public add(filter: any): void;
-        public remove(filter: any): void;
+    class EjsCollection {
+        public ejsObjects: any[];
+        private jsonObjects;
+        public indexOf(ejsObject: any): number;
+        public add(ejsObject: any): void;
+        public remove(ejsObject: any): void;
+    }
+}
+declare module elasticui.util {
+    class FilterCollection extends EjsCollection {
         public getAsFilter(): any[];
         public getAsORFilter(): any[];
         public contains(filter: any): boolean;
@@ -96,17 +100,21 @@ declare module elasticui.filters {
 declare module elasticui.controllers {
     interface IAggregationScope extends IIndexScope {
         aggResult: any;
+        aggregation: {
+            agg: any;
+            filterSelf: boolean;
+        };
     }
     class AggregationController {
-        public agg: any;
-        public filterSelf: boolean;
         private scope;
+        private previousProvider;
         static $inject: string[];
         constructor($scope: IAggregationScope);
-        private getAggName();
+        public init(): void;
         private updateResults();
-        public setFilterSelf(filterSelf?: boolean): void;
-        public setAggregation(agg: any): void;
+        public updateAgg(): void;
+        private static getAggName(ejsAggregation);
+        public getAggregationExplicit(ejsAggregation: any, filterSelf: boolean, filters: any[]): any;
         public getAggregation(filters: any[]): any;
     }
 }
@@ -134,11 +142,14 @@ declare module elasticui.controllers {
 declare module elasticui.controllers {
     interface IIndexScope extends IFilteredScope {
         indexVM: IIndexViewModel;
+        ejs: any;
     }
     interface IIndexViewModel {
         host: any;
         query: any;
         sort: any;
+        aggregationProviders: util.SimpleSet;
+        filters: util.FilterCollection;
         highlight: any;
         loaded: boolean;
         loading: boolean;
@@ -147,19 +158,16 @@ declare module elasticui.controllers {
         pageCount: number;
         pageSize: number;
         results: any;
-        addAggregationProvider: (any: any) => void;
         refresh: () => void;
     }
 }
 declare module elasticui.controllers {
     class IndexController {
-        private aggregations;
         private es;
         private $rootScope;
         public filters: util.FilterCollection;
         public indexVM: IIndexViewModel;
         public loaded(): void;
-        public addAggregationProvider(aggProvider: any): void;
         static $inject: string[];
         constructor($scope: any, $timeout: any, $window: any, es: services.ElasticService, $rootScope: any);
         private getSearchPromise();
@@ -296,6 +304,14 @@ declare module elasticui.util {
     class EjsTool {
         static getJsonFromEjsObject(object: any): string;
         static equals(objectA: any, objectB: any): boolean;
+    }
+}
+declare module elasticui.util {
+    class SimpleSet {
+        public objects: any[];
+        public indexOf(object: any): number;
+        public add(object: any): void;
+        public remove(object: any): void;
     }
 }
 declare module elasticui.widgets.directives {
