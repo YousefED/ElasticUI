@@ -17,7 +17,8 @@
 
             this.host = host;
             this.client = this.esFactory({
-                host: host
+                host: host,
+                calcDeadTimeout: "flat"
             });
 
             return true;

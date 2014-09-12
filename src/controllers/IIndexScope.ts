@@ -19,5 +19,6 @@
         pageSize: number;
         results: any;
         refresh: () => void;
+        error: any;
     }
 }

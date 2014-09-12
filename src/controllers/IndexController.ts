@@ -20,7 +20,8 @@ module elasticui.controllers {
             pageCount: 0,
             pageSize: 10,
             results: null,
-            refresh: () => this.refreshIfDocCountChanged()
+            refresh: () => this.refreshIfDocCountChanged(),
+            error: null
         };
 
         public loaded() {
@@ -89,19 +90,17 @@ module elasticui.controllers {
                 body: request
             });
 
-            var abort = res.abort;
-
-            res = res.then(null, function(err) {
-                this.$rootScope.$broadcast('eui-search-error', err);
-            }.bind(this));
-
-            res.abort = abort;
-
             return res;
         }
 
+
         private searchPromise = null;
         private refreshPromise = null;
+
+        private onError(err) {
+            this.$rootScope.$broadcast('eui-search-error', err);
+            this.indexVM.error = err;
+        }
 
         private search() {
             if (!this.indexVM.loaded || !this.indexVM.index) {
@@ -115,8 +114,9 @@ module elasticui.controllers {
             this.searchPromise = this.getSearchPromise();
             this.searchPromise.then((body) => {
                 this.searchPromise = null;
+                this.indexVM.error = null;
                 this.onResult(body)
-            });
+            }, (err) => this.onError(err));
         }
 
         public refreshIfDocCountChanged() {
@@ -127,8 +127,9 @@ module elasticui.controllers {
             this.refreshPromise = this.getSearchPromise();
             this.refreshPromise.then((body) => {
                 this.refreshPromise = null;
+                this.indexVM.error = null;
                 this.onResult(body, true)
-            });
+            }, (err) => this.onError(err));
         }
 
         private onResult(body, updateOnlyIfCountChanged: boolean = false) {
