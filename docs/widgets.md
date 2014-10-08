@@ -22,8 +22,19 @@ Using this prebuilt widget would correspond to directly writing:
     <input type="text" eui-query="ejs.MatchQuery('textField', querystring)" ng-model="querystring" eui-enabled="querystring.length" />
 
 
+euiSingleselect
+---
+A widget designed to expose facets on mutually exclusive values (only one single item can be selected)
+
+*Example (using widget directive):*
+
+    <eui-singleselect field="'facet_field'" size="5"></eui-singleselect>
+
+
 euiChecklist
 ---
+A widget designed to expose facets on a collection of related values (multiple items can be selected)
+
 *Example (using widget directive):*
 
     <eui-checklist field="'facet_field'" size="5"></eui-checklist>
