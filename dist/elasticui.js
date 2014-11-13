@@ -666,7 +666,8 @@ var elasticui;
                     results: null,
                     refresh: function () {
                         return _this.refreshIfDocCountChanged();
-                    }
+                    },
+                    error: null
                 };
                 this.searchPromise = null;
                 this.refreshPromise = null;
@@ -752,15 +753,12 @@ var elasticui;
                     body: request
                 });
 
-                var abort = res.abort;
-
-                res = res.then(null, function (err) {
-                    this.$rootScope.$broadcast('eui-search-error', err);
-                }.bind(this));
-
-                res.abort = abort;
-
                 return res;
+            };
+
+            IndexController.prototype.onError = function (err) {
+                this.$rootScope.$broadcast('eui-search-error', err);
+                this.indexVM.error = err;
             };
 
             IndexController.prototype.search = function () {
@@ -776,7 +774,13 @@ var elasticui;
                 this.searchPromise = this.getSearchPromise();
                 this.searchPromise.then(function (body) {
                     _this.searchPromise = null;
+                    _this.indexVM.error = null;
                     _this.onResult(body);
+                }, function (err) {
+                    if (_this.searchPromise) {
+                        _this.searchPromise = null;
+                        _this.onError(err);
+                    }
                 });
             };
 
@@ -789,7 +793,13 @@ var elasticui;
                 this.refreshPromise = this.getSearchPromise();
                 this.refreshPromise.then(function (body) {
                     _this.refreshPromise = null;
+                    _this.indexVM.error = null;
                     _this.onResult(body, true);
+                }, function (err) {
+                    if (_this.refreshPromise) {
+                        _this.refreshPromise = null;
+                        _this.onError(err);
+                    }
                 });
             };
 
@@ -902,7 +912,8 @@ var elasticui;
 
                 this.host = host;
                 this.client = this.esFactory({
-                    host: host
+                    host: host,
+                    calcDeadTimeout: "flat"
                 });
 
                 return true;

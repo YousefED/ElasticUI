@@ -116,7 +116,12 @@ module elasticui.controllers {
                 this.searchPromise = null;
                 this.indexVM.error = null;
                 this.onResult(body)
-            }, (err) => this.onError(err));
+            }, (err) => {
+                if (this.searchPromise) { // if set to null it was aborted (for simple client)
+                    this.searchPromise = null;
+                    this.onError(err);
+                }
+            });
         }
 
         public refreshIfDocCountChanged() {
@@ -129,7 +134,12 @@ module elasticui.controllers {
                 this.refreshPromise = null;
                 this.indexVM.error = null;
                 this.onResult(body, true)
-            }, (err) => this.onError(err));
+            }, (err) => {
+                if (this.refreshPromise) { // if set to null it was aborted (for simple client)
+                    this.refreshPromise = null;
+                    this.onError(err);
+                }
+            });
         }
 
         private onResult(body, updateOnlyIfCountChanged: boolean = false) {

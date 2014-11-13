@@ -159,6 +159,7 @@ declare module elasticui.controllers {
         pageSize: number;
         results: any;
         refresh: () => void;
+        error: any;
     }
 }
 declare module elasticui.controllers {
@@ -173,6 +174,7 @@ declare module elasticui.controllers {
         private getSearchPromise();
         private searchPromise;
         private refreshPromise;
+        private onError(err);
         private search();
         public refreshIfDocCountChanged(): void;
         private onResult(body, updateOnlyIfCountChanged?);
