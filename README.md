@@ -29,7 +29,7 @@ Add the following files to your Angular project:
 
  - elasticui.js from dist/
  - elastic.js from [fullscale/elastic.js][1]
- - elasticsearch.angular.js from [elasticsearch.org][2]
+ - elasticsearch.angular.js from [elasticsearch.org][2] or alternatively [elasticsearch.angular.simple.js][7]
 
 Set up ElasticUI in your project by defining your ElasticSearch host as *euiHost*:
 
@@ -63,4 +63,5 @@ Example dashboard built on top of this project:
   [3]: https://github.com/YousefED/ElasticUI/blob/master/examples/demo/demo.html
   [4]: https://github.com/YousefED/ElasticUI/blob/master/docs/widgets.md
   [5]: https://github.com/YousefED/ElasticUI/blob/master/docs/components.md
-  [6]: http://jsfiddle.net/gh/get/library/pure/yousefed/elasticui/tree/master/examples/demo/
+  [6]: http://jsfiddle.net/gh/get/library/pure/yousefed/elasticui/tree/master/examples/demo
+  [7]: https://github.com/YousefED/elasticsearch.angular.simple
