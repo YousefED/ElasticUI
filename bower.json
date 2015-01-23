@@ -1,0 +1,35 @@
+{
+  "name": "elasticui",
+  "version": "0.0.5",
+  "homepage": "http://www.elasticui.com",
+  "description": "AngularJS directives for Elasticsearch",
+  "main": "dist/elasticui.min.js",
+  "authors": [
+    "Yousef El-Dardiry"
+  ],
+  "license": "Apache 2.0",
+  "ignore": [
+    "**/.*",
+    "_reference.ts",
+    "elasticui.csproj",
+    "elasticui.sln",
+    "Gruntfile.js",
+    "node_modules",
+    "bower_components",
+    "docs",
+    "examples",
+    "lib",
+    "src",
+    "tests"
+  ],
+  "dependencies": {
+    "elastic.js": ">=1.2.0",
+    "elasticsearch": ">=3.1.1"
+  },
+  "keywords": [
+    "elasticsearch",
+    "elastic",
+    "angular",
+    "angularjs"
+  ]
+}
