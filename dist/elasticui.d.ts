@@ -1,17 +1,17 @@
-﻿declare module elasticui.util {
+declare module elasticui.util {
     class EjsCollection {
-        public ejsObjects: any[];
+        ejsObjects: any[];
         private jsonObjects;
-        public indexOf(ejsObject: any): number;
-        public add(ejsObject: any): void;
-        public remove(ejsObject: any): void;
+        indexOf(ejsObject: any): number;
+        add(ejsObject: any): void;
+        remove(ejsObject: any): void;
     }
 }
 declare module elasticui.util {
     class FilterCollection extends EjsCollection {
-        public getAsFilter(): any[];
-        public getAsORFilter(): any[];
-        public contains(filter: any): boolean;
+        getAsFilter(): any[];
+        getAsORFilter(): any[];
+        contains(filter: any): boolean;
     }
 }
 declare module elasticui.util {
@@ -110,12 +110,12 @@ declare module elasticui.controllers {
         private previousProvider;
         static $inject: string[];
         constructor($scope: IAggregationScope);
-        public init(): void;
+        init(): void;
         private updateResults();
-        public updateAgg(): void;
+        updateAgg(): void;
         private static getAggName(ejsAggregation);
-        public getAggregationExplicit(ejsAggregation: any, filterSelf: boolean, filters: any[]): any;
-        public getAggregation(filters: any[]): any;
+        getAggregationExplicit(ejsAggregation: any, filterSelf: boolean, filters: any[]): any;
+        getAggregation(filters: any[]): any;
     }
 }
 declare module elasticui.controllers {
@@ -129,7 +129,7 @@ declare module elasticui.controllers {
         private scope;
         static $inject: string[];
         constructor($scope: IFilterScope);
-        public init(): void;
+        init(): void;
         private updateFilter();
     }
 }
@@ -158,17 +158,18 @@ declare module elasticui.controllers {
         pageCount: number;
         pageSize: number;
         results: any;
-        refresh: () => void;
+        refresh: (softRefresh?: boolean) => void;
         error: any;
+        autoLoad: boolean;
     }
 }
 declare module elasticui.controllers {
     class IndexController {
         private es;
         private $rootScope;
-        public filters: util.FilterCollection;
-        public indexVM: IIndexViewModel;
-        public loaded(): void;
+        filters: util.FilterCollection;
+        indexVM: IIndexViewModel;
+        loaded(): void;
         static $inject: string[];
         constructor($scope: any, $timeout: any, $window: any, es: services.ElasticService, $rootScope: any);
         private getSearchPromise();
@@ -176,13 +177,13 @@ declare module elasticui.controllers {
         private refreshPromise;
         private onError(err);
         private search();
-        public refreshIfDocCountChanged(): void;
+        refresh(softRefresh?: boolean): void;
         private onResult(body, updateOnlyIfCountChanged?);
     }
 }
 declare module elasticui.controllers {
     class OrFilterController {
-        public filters: util.FilterCollection;
+        filters: util.FilterCollection;
         private scope;
         static $inject: string[];
         constructor($scope: any);
@@ -200,20 +201,20 @@ declare module elasticui.controllers {
         private scope;
         static $inject: string[];
         constructor($scope: ISortScope);
-        public init(): void;
+        init(): void;
         private updateSort();
-        public updateEnabled(): void;
-        public isEnabledOnIndexScope(): boolean;
+        updateEnabled(): void;
+        isEnabledOnIndexScope(): boolean;
     }
 }
 declare module elasticui.services {
     class ElasticService {
-        public client: any;
+        client: any;
         private esFactory;
         private host;
         static $inject: string[];
         constructor(esFactory: any, euiHost: any);
-        public setHost(host: any): boolean;
+        setHost(host: any): boolean;
     }
 }
 declare module elasticui.widgets.directives {
@@ -248,10 +249,10 @@ declare module elasticui.controllers {
         private scope;
         static $inject: string[];
         constructor($scope: IHighlightScope);
-        public init(): void;
+        init(): void;
         private updateHighlight();
-        public updateEnabled(): void;
-        public isEnabledOnIndexScope(): boolean;
+        updateEnabled(): void;
+        isEnabledOnIndexScope(): boolean;
     }
 }
 declare module elasticui.controllers {
@@ -262,9 +263,9 @@ declare module elasticui.controllers {
         private scope;
         static $inject: string[];
         constructor($scope: IHostScope);
-        public init(): void;
+        init(): void;
         private updateHost();
-        public readHost(): void;
+        readHost(): void;
     }
 }
 declare module elasticui.controllers {
@@ -278,7 +279,7 @@ declare module elasticui.controllers {
         private scope;
         static $inject: string[];
         constructor($scope: IQueryScope);
-        public init(): void;
+        init(): void;
         private updateQuery();
     }
 }
@@ -310,10 +311,10 @@ declare module elasticui.util {
 }
 declare module elasticui.util {
     class SimpleSet {
-        public objects: any[];
-        public indexOf(object: any): number;
-        public add(object: any): void;
-        public remove(object: any): void;
+        objects: any[];
+        indexOf(object: any): number;
+        add(object: any): void;
+        remove(object: any): void;
     }
 }
 declare module elasticui.widgets.directives {

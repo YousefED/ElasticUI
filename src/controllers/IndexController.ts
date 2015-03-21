@@ -20,14 +20,18 @@ module elasticui.controllers {
             pageCount: 0,
             pageSize: 10,
             results: null,
-            refresh: () => this.refreshIfDocCountChanged(),
-            error: null
+            refresh: (softRefresh: boolean = true) => this.refresh(softRefresh),
+            error: null,
+            autoLoad:true
         };
 
         public loaded() {
             if (!this.indexVM.loaded) {
                 this.indexVM.loaded = true;
-                this.search();
+
+                if (this.indexVM.autoLoad) {
+                    this.search();
+                }
             }
         }
 
@@ -124,7 +128,7 @@ module elasticui.controllers {
             });
         }
 
-        public refreshIfDocCountChanged() {
+        public refresh(softRefresh: boolean = true) {
             if (!this.indexVM.loaded || !this.indexVM.index || this.searchPromise != null) {
                 return;
             }
@@ -133,7 +137,7 @@ module elasticui.controllers {
             this.refreshPromise.then((body) => {
                 this.refreshPromise = null;
                 this.indexVM.error = null;
-                this.onResult(body, true)
+                this.onResult(body, softRefresh);
             }, (err) => {
                 if (this.refreshPromise) { // if set to null it was aborted (for simple client)
                     this.refreshPromise = null;

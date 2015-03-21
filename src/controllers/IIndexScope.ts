@@ -18,7 +18,8 @@
         pageCount: number;
         pageSize: number;
         results: any;
-        refresh: () => void;
+        refresh: (softRefresh?: boolean) => void;
         error: any;
+        autoLoad: boolean;
     }
 }
