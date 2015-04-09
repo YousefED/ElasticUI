@@ -21,7 +21,7 @@
         "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   ],
-  "main": "Gruntfile.js",
+  "main": "dist/elasticui.min.js",
   "scripts": {
     "start": "grunt build"
   },
