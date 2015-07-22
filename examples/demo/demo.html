@@ -45,6 +45,10 @@
                 <eui-singleselect field="'CHANGE_TO_FIELD'" size="5"></eui-singleselect> <!-- ACTION: change to field to use as facet -->
                 <h3>Multi select facet</h3>
                 <eui-checklist field="'CHANGE_TO_FIELD'" size="10"></eui-checklist> <!-- ACTION: change to field to use as facet -->
+                <h3>Results Per Page</h3>
+                <select ng-model="indexVM.pageSize">
+                    <option ng-repeat="item in [10, 20, 50, 100]">{{item}}</option>
+                </select>
             </div>
             <div class="col-xs-9 col-xs-offset-3 main">
                 <div class="instructions panel panel-primary">

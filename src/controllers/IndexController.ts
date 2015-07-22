@@ -47,7 +47,8 @@ module elasticui.controllers {
             $scope.$watchCollection('indexVM.aggregationProviders.objects', () => this.search());
 
             $scope.$watch('indexVM.host', () => { if (this.indexVM.host != null && es.setHost(this.indexVM.host)) { this.search(); } });
-            $scope.$watch('indexVM.sort', () => { this.indexVM.page = 1; this.search() });
+            $scope.$watch('indexVM.sort',() => { this.indexVM.page = 1; this.search() });
+            $scope.$watch('indexVM.pageSize',() => { this.indexVM.page = 1; this.search() });
             $scope.$watch('indexVM.page', () => this.search());
             $scope.$watch('indexVM.index', () => this.search());
             $scope.$watch('indexVM.query', () => this.search());
