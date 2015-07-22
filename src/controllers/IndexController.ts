@@ -111,15 +111,23 @@ module elasticui.controllers {
                 return;
             }
             if (this.refreshPromise != null) {
-                this.refreshPromise.abort();
+                var promiseToAbort = this.refreshPromise;
                 this.refreshPromise = null;
+                promiseToAbort.abort();
             }
+
+            if (this.searchPromise != null) {
+                var promiseToAbort = this.searchPromise;
+                this.searchPromise = null;
+                promiseToAbort.abort();
+            }  
+
             this.indexVM.loading = true;
             this.searchPromise = this.getSearchPromise();
             this.searchPromise.then((body) => {
                 this.searchPromise = null;
                 this.indexVM.error = null;
-                this.onResult(body)
+                this.onResult(body);
             }, (err) => {
                 if (this.searchPromise) { // if set to null it was aborted (for simple client)
                     this.searchPromise = null;
