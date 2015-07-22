@@ -694,8 +694,14 @@ var elasticui;
                     return;
                 }
                 if (this.refreshPromise != null) {
-                    this.refreshPromise.abort();
+                    var promiseToAbort = this.refreshPromise;
                     this.refreshPromise = null;
+                    promiseToAbort.abort();
+                }
+                if (this.searchPromise != null) {
+                    var promiseToAbort = this.searchPromise;
+                    this.searchPromise = null;
+                    promiseToAbort.abort();
                 }
                 this.indexVM.loading = true;
                 this.searchPromise = this.getSearchPromise();
@@ -904,8 +910,10 @@ var elasticui;
                     directive.scope = true;
                     directive.template = '\
             <ul class="pager">\
-                <li ng-class="{disabled:indexVM.page <= 1}"><a href="" ng-click="indexVM.page=indexVM.page - 1">Previous</a></li>\
-                <li ng-class="{disabled:indexVM.pageCount <= indexVM.page}"><a href="" ng-click="indexVM.page=indexVM.page + 1">Next</a></li>\
+                <li ng-if="indexVM.page <= 1" class="disabled"><a href="">Previous</a></li>\
+                <li ng-if="indexVM.page > 1"><a href="" ng-click="if(indexVM.page > 1) { indexVM.page=indexVM.page - 1 }">Previous</a></li>\
+                <li ng-if="indexVM.pageCount <= indexVM.page" class="disabled"><a href="">Next</a></li>\
+                <li ng-if="indexVM.pageCount > indexVM.page"><a href="" ng-click="if(indexVM.pageCount > indexVM.page) { indexVM.page=indexVM.page + 1 }">Next</a></li>\
             </ul>';
                     return directive;
                 }
@@ -1286,3 +1294,4 @@ var elasticui;
         })(directives = widgets.directives || (widgets.directives = {}));
     })(widgets = elasticui.widgets || (elasticui.widgets = {}));
 })(elasticui || (elasticui = {}));
+//# sourceMappingURL=elasticui.js.map

@@ -184,3 +184,4 @@ docs/components.html
 CHANGELOG.html
 *.local.html
 *.db
+dist/elasticui.min.js.map
