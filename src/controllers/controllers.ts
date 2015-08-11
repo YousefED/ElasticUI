@@ -1,1 +1,3 @@
-angular.module('elasticui.controllers', []).controller(elasticui.controllers)
+module elasticui.controllers {
+    export var controllers: ng.IModule = angular.module('elasticui.controllers', []);
+}
