@@ -13,6 +13,10 @@ The easiest way to get started is to checkout the [demo file][3] (or [jsfiddle][
 This file demonstrates a simple use of facets, search and pagination. 
 Just change 4 fields in the source to match your Elasticsearch setup and mapping.
 
+To use the demo file,  create a directory in your Elasticsearch plugins directory 
+and drop the demo file in a _site subfolder within. The demo file is then accessible
+via web browser e.g. http://YOUR_ES_IP/_plugins/demo/demo.html .
+
 _If you are not serving the demo page from Elasticsearch you might have to enable [CORS](http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-http.html) and allow requests to Elasticsearch from your host._
 
 **Changing the UI of the widgets in the Demo**
